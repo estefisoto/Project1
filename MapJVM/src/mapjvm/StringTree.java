@@ -19,13 +19,13 @@ public class StringTree {
     public StringTree(String stringName)
     {
         name = stringName;
-        children = null;
+        children = new ArrayList<StringTree>();
     }
     
     public StringTree(String stringName, StringTree st)
     {
-        name = stringName;
-        children = st.getChildren();
+        this(stringName);
+        addChild(st);
     }
     
     public ArrayList<StringTree> getChildren()
@@ -50,7 +50,7 @@ public class StringTree {
         int currentLine ;
         int biggestLine = name.length();
         //Continue until all the nodes have been checked
-        while(nextLevel != null)
+        while(!nextLevel.isEmpty())
         {
             currentLine = 0;
             for(int i = 0; i < nextLevel.size(); i++)
@@ -64,5 +64,14 @@ public class StringTree {
             biggestLine = currentLine > biggestLine ? currentLine : biggestLine;
         }
         return biggestLine;
+    }
+    
+    @Override
+    public String toString()
+    {
+        String rv = name + "\n";
+        for(StringTree child : children)
+            rv += child.toString();
+        return rv;
     }
 }

@@ -44,6 +44,10 @@ public class MapJVM {
         layout.pack();
         layout.setVisible(true); 
         
-       
+        //Testing String tree
+        StringTree str = new StringTree("helloWorld");
+        str.addChild(new StringTree("childA"));
+        str.addChild(new StringTree("childB"));
+        System.out.println(str);
     }
 }
