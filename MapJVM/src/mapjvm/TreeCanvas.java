@@ -23,6 +23,9 @@ public class TreeCanvas extends Canvas {
         //Set size and color of canvas
         this.setSize(1000,1000);
         this.setBackground(Color.white);
+        
+        //TODO : Delete this test code
+        nodes.add(new StringTree("HELLO WORLD"));
     }
      @Override
     //Need this function in order to paint on canvas
@@ -31,7 +34,7 @@ public class TreeCanvas extends Canvas {
        //For loop that draws all shapes currently in the vector
        for (int i = 0; i < nodes.size(); i++) {
            StringTree s = nodes.get(i);
-           s.draw(g);
+           (new GraphicsTree(s)).draw(g);
     }
 
 

@@ -19,11 +19,11 @@ import java.awt.event.ActionListener;
  * @author mwaldron74
  */
 public class GUI extends Frame implements ActionListener{
-    private Canvas container;
+    private TreeCanvas container;
     public GUI(){
         super("");
         addWindowListener(new closeWindow());
-        container = new Canvas();
+        container = new TreeCanvas();
         container.setSize(300,300);
         add(container);
        
