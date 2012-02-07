@@ -7,6 +7,7 @@ package mapjvm;
 
 import java.awt.Canvas;
 import java.awt.Frame;
+import java.awt.Graphics;
 import java.awt.Menu;
 import java.awt.MenuBar;
 import java.awt.MenuItem;
@@ -18,12 +19,12 @@ import java.awt.event.ActionListener;
  * @author mwaldron74
  */
 public class GUI extends Frame implements ActionListener{
-    
+    private Canvas container;
     public GUI(){
         super("");
         addWindowListener(new closeWindow());
-        Canvas container= new Canvas();
-        container.setSize(800,800);
+        container = new Canvas();
+        container.setSize(300,300);
         add(container);
        
         MenuBar bar=new MenuBar();
@@ -35,7 +36,7 @@ public class GUI extends Frame implements ActionListener{
         file.add(close);
         connect.addActionListener(this);
         close.addActionListener(this);
-       setMenuBar(bar);
+        setMenuBar(bar);
         
       //  Scrollbar vertical= new Scrollbar();
         
@@ -47,6 +48,7 @@ public class GUI extends Frame implements ActionListener{
         pack();
         setVisible(true);
     }
+    
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getActionCommand().equals("Connect to JVM"))
