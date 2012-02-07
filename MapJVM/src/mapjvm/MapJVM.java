@@ -28,10 +28,12 @@ public class MapJVM {
         layout.add(container);
        
         MenuBar bar=new MenuBar();
-        Menu options = new Menu("Options");
-        bar.add(options);
-        MenuItem connect=new MenuItem("Connect to JVM");
-        options.add(connect);
+        Menu file = new Menu("File");
+        bar.add(file);
+        MenuItem connect = new MenuItem("Connect to JVM");
+        MenuItem close = new MenuItem("Close");
+        file.add(connect);
+        file.add(close);
         layout.setMenuBar(bar);
         
       //  Scrollbar vertical= new Scrollbar();
