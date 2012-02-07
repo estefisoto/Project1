@@ -5,6 +5,8 @@
 
 package mapjvm;
 
+import java.awt.Font;
+import java.awt.Graphics;
 import java.util.ArrayList;
 
 /**
@@ -73,5 +75,13 @@ public class StringTree {
         for(StringTree child : children)
             rv += child;
         return rv + ")";
+    }
+    
+    public void draw(Graphics g)
+    {
+        Font font = new Font(Font.SANS_SERIF, Font.BOLD, 28);
+        g.setFont(font);
+        g.drawString(name, 100, 100);
+        g.drawOval(100, 100, 28, 28);
     }
 }
