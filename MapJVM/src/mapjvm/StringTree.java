@@ -69,9 +69,9 @@ public class StringTree {
     @Override
     public String toString()
     {
-        String rv = name + "\n";
+        String rv = "(" + name;
         for(StringTree child : children)
-            rv += child.toString();
-        return rv;
+            rv += child;
+        return rv + ")";
     }
 }
