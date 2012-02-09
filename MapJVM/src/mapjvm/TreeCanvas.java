@@ -43,8 +43,7 @@ public class TreeCanvas extends Canvas {
        //For loop that draws all shapes currently in the vector
        for (int i = 0; i < nodes.size(); i++) {
            StringTree s = nodes.get(i);
-           //(new GraphicsTree(s)).draw(g);
-           GraphicsTree gt = new GraphicsTree(s);
+           (new GraphicsTree(s)).draw(g);
         }
     }
 
