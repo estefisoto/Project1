@@ -25,7 +25,9 @@ public class TreeCanvas extends Canvas {
         this.setBackground(Color.white);
         
         //TODO : Delete this test code
-        nodes.add(new StringTree("HELLO WORLD"));
+        StringTree x = (new StringTree("MAchine Debug Inteface Information"));
+        x.addChild(new StringTree("cow"));
+        nodes.add(x);
     }
      @Override
     //Need this function in order to paint on canvas
@@ -35,6 +37,7 @@ public class TreeCanvas extends Canvas {
        for (int i = 0; i < nodes.size(); i++) {
            StringTree s = nodes.get(i);
            (new GraphicsTree(s)).draw(g);
+           
     }
 
 

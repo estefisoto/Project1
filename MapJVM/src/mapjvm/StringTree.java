@@ -36,6 +36,11 @@ public class StringTree {
         return children;
     }
     
+    public int getNumChildren()
+    {
+        return children.size();
+    }
+    
     public void addChild(StringTree s)
     {
         children.add(s);
