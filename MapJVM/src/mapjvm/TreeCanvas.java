@@ -25,10 +25,17 @@ public class TreeCanvas extends Canvas {
         this.setBackground(Color.white);
         
         //TODO : Delete this test code
-        StringTree x = (new StringTree("MAchine Debug Inteface Information"));
-        x.addChild(new StringTree("cow"));
-        nodes.add(x);
-    }
+        StringTree grandparent = new StringTree("grandParent");
+        StringTree parent = new StringTree("parent");
+        StringTree uncle = new StringTree("uncle");
+        StringTree child = new StringTree("child");
+        StringTree cousin = new StringTree("cousin");
+        grandparent.addChild(parent);
+        parent.addChild(uncle);
+        uncle.addChild(child);
+        cousin.addChild(cousin);
+        nodes.add(grandparent);
+     }
      @Override
     //Need this function in order to paint on canvas
     public void paint(Graphics g)
@@ -36,12 +43,9 @@ public class TreeCanvas extends Canvas {
        //For loop that draws all shapes currently in the vector
        for (int i = 0; i < nodes.size(); i++) {
            StringTree s = nodes.get(i);
-           (new GraphicsTree(s)).draw(g);
-           
-    }
-
-
-
+           //(new GraphicsTree(s)).draw(g);
+           GraphicsTree gt = new GraphicsTree(s);
+        }
     }
 
 

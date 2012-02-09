@@ -20,8 +20,8 @@ public class GraphicsTree {
     private final int PADDING = 20;
     private final int FONT_PADDING_Y = 25;
     private int FONT_PADDING_X;
-    private int fontX = 0, fontY = 0, ovalX = 0;
-    private int ovalY = 0, width = 0, height = 0;
+    private int fontX, fontY, ovalX;
+    private int ovalY, width, height;
     
     public GraphicsTree(StringTree strTree)
     {
@@ -31,7 +31,7 @@ public class GraphicsTree {
         height = 5 * FONT_SIZE / 3;
         fontY = FONT_PADDING_Y + FONT_SIZE;
         fontX = FONT_PADDING_X + FONT_SIZE;
-        ovalX = PADDING;
+        ovalX = 0;
         ovalY = PADDING;
         children = new ArrayList<GraphicsTree>();
         addChildren();
@@ -45,10 +45,9 @@ public class GraphicsTree {
         height = 5 * FONT_SIZE / 3;
         fontY = Y + FONT_PADDING_Y + FONT_SIZE;
         fontX = X + FONT_PADDING_X + FONT_SIZE;
-        ovalX = X + PADDING;
+        ovalX = X;
         ovalY = Y + PADDING;
         children = new ArrayList<GraphicsTree>();
-        addChildren();
     }
     
     //TODO : make sense of child adding algorithm
@@ -56,6 +55,25 @@ public class GraphicsTree {
     {
         for(StringTree child : st.getChildren())
             children.add(new GraphicsTree(child));
+        
+        
+        ArrayList<GraphicsTree> nextLevel = children;
+        int currentLine;
+        int biggestLine = width;
+        //Continue until all the nodes have been checked
+        while(!nextLevel.isEmpty())
+        {
+            currentLine = 0;
+            for(int i = 0; i < nextLevel.size(); i++)
+            {
+                GraphicsTree gt = nextLevel.remove(0);
+                currentLine += gt.getWidth();
+                for(GraphicsTree child : gt.getChildren())
+                    nextLevel.add(child);
+            }
+            //Check if current line is bigger than the biggest
+            biggestLine = currentLine > biggestLine ? currentLine : biggestLine;
+        }
     }
     
     public void draw(Graphics g)
@@ -80,7 +98,7 @@ public class GraphicsTree {
     
     public int getWidth()
     {
-        return width + PADDING;
+        return width;
     }
     
     public ArrayList<GraphicsTree> getChildren()
