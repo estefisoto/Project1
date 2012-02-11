@@ -57,23 +57,23 @@ public class GraphicsTree {
             children.add(new GraphicsTree(child));
         
         
-        ArrayList<GraphicsTree> nextLevel = children;
-        int currentLine;
-        int biggestLine = width;
+        /*ArrayList<StringTree> nextLevel = st.getChildren();
+        int X = 0;
+        int Y = 0;
         //Continue until all the nodes have been checked
         while(!nextLevel.isEmpty())
         {
-            currentLine = 0;
+            X = 0;
             for(int i = 0; i < nextLevel.size(); i++)
             {
-                GraphicsTree gt = nextLevel.remove(0);
-                currentLine += gt.getWidth();
+                StringTree str = nextLevel.remove(0);
+                children.add(new GraphicsTree(st, ));
                 for(GraphicsTree child : gt.getChildren())
                     nextLevel.add(child);
             }
             //Check if current line is bigger than the biggest
             biggestLine = currentLine > biggestLine ? currentLine : biggestLine;
-        }
+        }*/
     }
     
     public void draw(Graphics g)
@@ -101,11 +101,17 @@ public class GraphicsTree {
         return width;
     }
     
+    public int getHeight()
+    {
+        return height;
+    }
+    
     public ArrayList<GraphicsTree> getChildren()
     {
         return children;
     }
     
+    //TODO: doesnt work right
     public int longestLine()
     {
         ArrayList<GraphicsTree> nextLevel = children;
