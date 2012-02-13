@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 /**
  *
- * @author mwaldron74
+ * @author esoto.student
  */
 public class GraphicsTree {
     private StringTree st;
