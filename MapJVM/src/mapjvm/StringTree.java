@@ -5,9 +5,8 @@
 
 package mapjvm;
 
-import java.awt.Font;
-import java.awt.Graphics;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  *
@@ -17,18 +16,25 @@ import java.util.ArrayList;
 public class StringTree {
     
     private ArrayList<StringTree> children;
+    public HashMap<StringTree, StringTree> additionalConnections;
     private String name;
     
     public StringTree(String stringName)
     {
         name = stringName;
         children = new ArrayList<StringTree>();
+        additionalConnections = new HashMap<StringTree, StringTree>();
     }
     
     public StringTree(String stringName, StringTree st)
     {
         this(stringName);
         addChild(st);
+    }
+    
+    public void addConnection(StringTree from, StringTree to)
+    {
+        additionalConnections.put(from, to);
     }
     
     public ArrayList<StringTree> getChildren()

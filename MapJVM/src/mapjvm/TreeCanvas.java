@@ -25,22 +25,25 @@ public class TreeCanvas extends Canvas {
         this.setBackground(Color.white);
         
         //TODO : Delete this test code
-        StringTree grandparent = new StringTree("grandParent");
-        StringTree parent = new StringTree("parent");
-        StringTree uncle = new StringTree("uncle");
-        StringTree child = new StringTree("child");
-        StringTree cousin = new StringTree("cousin");
-        StringTree aunt= new StringTree("aunt");
-        grandparent.addChild(parent);
-        grandparent.addChild(uncle);
-        grandparent.addChild(aunt);
-        parent.addChild(child);
-        uncle.addChild(cousin);
-        uncle.addChild(cousin);
-        aunt.addChild(cousin);
-        aunt.addChild(cousin);
-        aunt.addChild(cousin);
-        nodes.add(grandparent);
+        StringTree main = new StringTree("main");
+        StringTree BSTa = new StringTree("BST A");
+        StringTree BSTb = new StringTree("BST B");
+        StringTree chAL = new StringTree("child A Left");
+        StringTree chBL = new StringTree("child B Left");
+        StringTree chBR = new StringTree("child B Right");
+        StringTree LL0 = new StringTree("Linked List (0)");
+        StringTree LL1 = new StringTree("Linked List (1)");
+        StringTree LL2 = new StringTree("Linked List (2)");
+        main.addChild(BSTa);
+        main.addChild(BSTb);
+        main.addChild(LL0);
+        LL0.addChild(LL1);
+        LL1.addChild(LL2);
+        BSTa.addChild(chAL);
+        main.addConnection(BSTa, BSTb);
+        BSTb.addChild(chBL);
+        BSTb.addChild(chBR);
+        nodes.add(main);
      }
      @Override
     //Need this function in order to paint on canvas

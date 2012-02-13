@@ -9,21 +9,24 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 
 /**
  *
  * @author esoto.student
  */
 public class GraphicsTree {
-    private StringTree st;
+    protected StringTree st;
     private ArrayList<GraphicsTree> children;
     private final int FONT_SIZE = 20;
-    private int PADDING_X = 0, PADDING_Y=1;
+    private int PADDING_X = 0;
+    private int PADDING_Y = 0;
     private final int FONT_PADDING_Y = 22;
     private int FONT_PADDING_X;
     private int fontX, fontY, ovalX;
     private int ovalY, width, height;
-    private int x1,x2,y1,y2;
+    private HashMap<GraphicsTree, GraphicsTree> additionalConnections;
     
     public GraphicsTree(StringTree strTree)
     {
@@ -32,18 +35,13 @@ public class GraphicsTree {
        //Width and height and correctly calculated
         width = FONT_SIZE * st.getName().length();
         height = 5 * FONT_SIZE / 3;
-        fontY = FONT_PADDING_Y;
-        fontX = FONT_PADDING_X;
-        ovalX = PADDING_X;
-        ovalY = PADDING_Y;
-        x1=ovalX+(width/2);
-        y1=ovalY+height;
-        x2=ovalX+(width/2);
-        y2=ovalY;
+        ovalX = 20;
+        ovalY = 20;
+        fontY = ovalY + FONT_PADDING_Y;
+        fontX = ovalX + FONT_PADDING_X;
         children = new ArrayList<GraphicsTree>();
         addChildren();
-        
-        
+        additionalConnections = connections();
     }
     
     public GraphicsTree(StringTree strTree, int X, int Y)
@@ -52,52 +50,58 @@ public class GraphicsTree {
         FONT_PADDING_X = st.getName().length() * 5;
         width = FONT_SIZE * st.getName().length();
         height = 5 * FONT_SIZE / 3;
-        PADDING_Y=Y;
+        PADDING_Y = Y;
         fontY = Y + FONT_PADDING_Y;
         fontX = X + FONT_PADDING_X; 
         ovalX = X;
         ovalY = Y;
-        x1=ovalX+(width/2);
-        y1=ovalY+height;
-        x2=ovalX+(width/2);
-        y2=ovalY;
         children = new ArrayList<GraphicsTree>();
         addChildren();
+        additionalConnections = new HashMap<GraphicsTree, GraphicsTree>();
+    }
+    
+    public HashMap<GraphicsTree, GraphicsTree> connections()
+    {
+        HashMap<GraphicsTree, GraphicsTree> allConnections = new HashMap<GraphicsTree, GraphicsTree>();
+        ArrayList<GraphicsTree> from = new ArrayList<GraphicsTree>(), to = new ArrayList<GraphicsTree>();
+        for(StringTree key : st.additionalConnections.keySet())
+            for(GraphicsTree gt : allNodes())
+                if(gt.st.equals(key))
+                    from.add(gt);
+        for(StringTree value : st.additionalConnections.values())
+            for(GraphicsTree gt : allNodes())
+                if(gt.st.equals(value))
+                    to.add(gt);
+        for(int i = 0; i < from.size(); i++)
+        {
+            allConnections.put(from.get(i), to.get(i));
+        }
+        return allConnections;
     }
   
-    //TODO : make sense of child adding algorithm
     private void addChildren()
     {
         PADDING_Y += 100;
-        PADDING_X+=ovalX;
+        PADDING_X += ovalX;
         for(StringTree child : st.getChildren())
         {   
             GraphicsTree graphChild=new GraphicsTree(child, PADDING_X, PADDING_Y);
             children.add(graphChild);
-            if(child.getNumChildren()>0)
-            PADDING_X += graphChild.getchW()+ 50*child.getNumChildren() ;
+            if(child.getNumChildren() > 0)
+                PADDING_X += graphChild.getchW()+ 50 * child.getNumChildren() ;
             else
-            PADDING_X += FONT_SIZE * child.getName().length() + 50;
+                PADDING_X += FONT_SIZE * child.getName().length() + 50;
         }
-        
-        
-        /*ArrayList<StringTree> nextLevel = st.getChildren();
-        int X = 0;
-        int Y = 0;
-        //Continue until all the nodes have been checked
-        while(!nextLevel.isEmpty())
-        {
-            X = 0;
-            for(int i = 0; i < nextLevel.size(); i++)
-            {
-                StringTree str = nextLevel.remove(0);
-                children.add(new GraphicsTree(st, ));
-                for(GraphicsTree child : gt.getChildren())
-                    nextLevel.add(child);
-            }
-            //Check if current line is bigger than the biggest
-            biggestLine = currentLine > biggestLine ? currentLine : biggestLine;
-        }*/
+    }
+    
+    private ArrayList<GraphicsTree> allNodes()
+    {
+        ArrayList<GraphicsTree> rv = new ArrayList<GraphicsTree>();
+        rv.add(this);
+        for(GraphicsTree child: children)
+            for(GraphicsTree gt : child.allNodes())
+                rv.add(gt);
+        return rv;
     }
     
     public void draw(Graphics g)
@@ -105,27 +109,31 @@ public class GraphicsTree {
         Font font = new Font(Font.SANS_SERIF, Font.BOLD, FONT_SIZE);
         g.setFont(font);
         g.setColor(Color.black);
-        g.drawString(st.getName(), fontX, fontY);
-        g.drawOval(ovalX, ovalY, width, height);
-        
+        for(GraphicsTree from : additionalConnections.keySet())
+        {
+            GraphicsTree to = additionalConnections.get(from);
+            g.drawLine(from.getCenterX(), from.getCenterY(), to.getCenterX(), to.getCenterY());
+        }
         for(GraphicsTree child : children)
         {
+           g.drawLine(getCenterX(), getCenterY(), child.getCenterX(), child.getCenterY());
            child.draw(g);
-           g.drawLine(x1, y1, child.x2, child.y2);
         }
-        
+        g.setColor(Color.GREEN);
+        g.fillOval(ovalX, ovalY, width, height);
+        g.setColor(Color.BLACK);
+        g.drawOval(ovalX  , ovalY, width, height);
+        g.drawString(st.getName(), fontX, fontY);
     }
-    
-   
     
     public int getCenterX()
     {
-        return ovalX + width;
+        return ovalX + (width / 2);
     }
     
     public int getCenterY()
     {
-        return ovalY + height;
+        return ovalY + (height / 2);
     }
     
     public int getWidth()
