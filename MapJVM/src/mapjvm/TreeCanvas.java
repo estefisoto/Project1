@@ -30,10 +30,16 @@ public class TreeCanvas extends Canvas {
         StringTree uncle = new StringTree("uncle");
         StringTree child = new StringTree("child");
         StringTree cousin = new StringTree("cousin");
+        StringTree aunt= new StringTree("aunt");
         grandparent.addChild(parent);
-        parent.addChild(uncle);
-        uncle.addChild(child);
-        cousin.addChild(cousin);
+        grandparent.addChild(uncle);
+        grandparent.addChild(aunt);
+        parent.addChild(child);
+        uncle.addChild(cousin);
+        uncle.addChild(cousin);
+        aunt.addChild(cousin);
+        aunt.addChild(cousin);
+        aunt.addChild(cousin);
         nodes.add(grandparent);
      }
      @Override
