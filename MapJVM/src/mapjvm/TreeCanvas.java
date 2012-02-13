@@ -25,15 +25,15 @@ public class TreeCanvas extends Canvas {
         this.setBackground(Color.white);
         
         //TODO : Delete this test code
-        StringTree main = new StringTree("main");
-        StringTree BSTa = new StringTree("BST A");
-        StringTree BSTb = new StringTree("BST B");
-        StringTree chAL = new StringTree("child A Left");
-        StringTree chBL = new StringTree("child B Left");
-        StringTree chBR = new StringTree("child B Right");
-        StringTree LL0 = new StringTree("Linked List (0)");
-        StringTree LL1 = new StringTree("Linked List (1)");
-        StringTree LL2 = new StringTree("Linked List (2)");
+        StringTree main = new StringTree("main", "StackFrame");
+        StringTree BSTa = new StringTree("BST A", "Object");
+        StringTree BSTb = new StringTree("BST B", "Object");
+        StringTree chAL = new StringTree("child A Left", "Object");
+        StringTree chBL = new StringTree("child B Left", "Object");
+        StringTree chBR = new StringTree("child B Right", "Object");
+        StringTree LL0 = new StringTree("Linked List (0)", "Object");
+        StringTree LL1 = new StringTree("Linked List (1)", "Object");
+        StringTree LL2 = new StringTree("Linked List (2)", "Object");
         main.addChild(BSTa);
         main.addChild(BSTb);
         main.addChild(LL0);

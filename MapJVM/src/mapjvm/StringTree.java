@@ -18,17 +18,19 @@ public class StringTree {
     private ArrayList<StringTree> children;
     public HashMap<StringTree, StringTree> additionalConnections;
     private String name;
+    private String typeof;
     
-    public StringTree(String stringName)
+    public StringTree(String stringName, String type)
     {
         name = stringName;
+        typeof = type;
         children = new ArrayList<StringTree>();
         additionalConnections = new HashMap<StringTree, StringTree>();
     }
     
-    public StringTree(String stringName, StringTree st)
+    public StringTree(String stringName, String type, StringTree st)
     {
-        this(stringName);
+        this(stringName, type);
         addChild(st);
     }
     
@@ -55,6 +57,11 @@ public class StringTree {
     public String getName()
     {
         return name;
+    }
+    
+    public String getType()
+    {
+        return typeof;
     }
     
     @Override

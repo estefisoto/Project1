@@ -24,7 +24,7 @@ public class GUI extends Frame implements ActionListener{
         super("");
         addWindowListener(new closeWindow());
         container = new TreeCanvas();
-        container.setSize(300,300);
+        container.setSize(1300,400);
         add(container);
        
         MenuBar bar=new MenuBar();
@@ -32,19 +32,17 @@ public class GUI extends Frame implements ActionListener{
         bar.add(file);
         MenuItem connect = new MenuItem("Connect to JVM");
         MenuItem close = new MenuItem("Close");
+        MenuItem help = new MenuItem("Help");
         file.add(connect);
         file.add(close);
+        file.add(help);
         connect.addActionListener(this);
         close.addActionListener(this);
         setMenuBar(bar);
-        
       //  Scrollbar vertical= new Scrollbar();
-        
       //  Scrollbar horizontal= new Scrollbar(Scrollbar.HORIZONTAL,1000,50,500,5000);
       //  layout.add(vertical);
       //  layout.add(horizontal);
-        
-        
         pack();
         setVisible(true);
     }

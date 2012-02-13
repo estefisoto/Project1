@@ -119,7 +119,12 @@ public class GraphicsTree {
            g.drawLine(getCenterX(), getCenterY(), child.getCenterX(), child.getCenterY());
            child.draw(g);
         }
-        g.setColor(Color.GREEN);
+        if(st.getType().equals("Object"))
+            g.setColor(Color.GREEN);
+        else if(st.getType().equals("StackFrame"))
+            g.setColor(Color.ORANGE);
+        else
+            g.setColor(Color.RED);
         g.fillOval(ovalX, ovalY, width, height);
         g.setColor(Color.BLACK);
         g.drawOval(ovalX  , ovalY, width, height);
