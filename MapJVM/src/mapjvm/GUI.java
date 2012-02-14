@@ -30,13 +30,14 @@ public class GUI extends Frame implements ActionListener{
         MenuBar bar=new MenuBar();
         Menu file = new Menu("File");
         bar.add(file);
-        MenuItem connect = new MenuItem("Connect to JVM");
+        MenuItem connect = new MenuItem("Connect");
         MenuItem close = new MenuItem("Close");
         MenuItem help = new MenuItem("Help");
         file.add(connect);
-        file.add(close);
         file.add(help);
+        file.add(close);
         connect.addActionListener(this);
+        help.addActionListener(this);
         close.addActionListener(this);
         setMenuBar(bar);
       //  Scrollbar vertical= new Scrollbar();
@@ -49,9 +50,14 @@ public class GUI extends Frame implements ActionListener{
     
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(e.getActionCommand().equals("Connect to JVM"))
-            System.out.println("Connect");
+        if(e.getActionCommand().equals("Connect"))
+        {    
+            container.connect();
+            container.repaint();
+        }
         else if(e.getActionCommand().equals("Close"))
             System.out.println("Close");
+        else if(e.getActionCommand().equals("Help"))
+            System.out.println("Help");
     }
 }

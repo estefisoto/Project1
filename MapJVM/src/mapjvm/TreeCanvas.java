@@ -23,8 +23,11 @@ public class TreeCanvas extends Canvas {
         //Set size and color of canvas
         this.setSize(1000,1000);
         this.setBackground(Color.white);
-        
-        //TODO : Delete this test code
+     }
+     
+     public void connect()
+     {
+         //TODO : Delete this test code
         StringTree main = new StringTree("main", "StackFrame");
         StringTree BSTa = new StringTree("BST A", "Object");
         StringTree BSTb = new StringTree("BST B", "Object");
@@ -45,6 +48,7 @@ public class TreeCanvas extends Canvas {
         BSTb.addChild(chBR);
         nodes.add(main);
      }
+     
      @Override
     //Need this function in order to paint on canvas
     public void paint(Graphics g)
