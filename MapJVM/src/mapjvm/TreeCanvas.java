@@ -49,6 +49,11 @@ public class TreeCanvas extends Canvas {
         nodes.add(main);
      }
      
+     public void disconnect()
+     {
+         nodes.clear();
+     }
+     
      @Override
     //Need this function in order to paint on canvas
     public void paint(Graphics g)

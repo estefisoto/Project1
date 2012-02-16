@@ -9,7 +9,6 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 
 /**
@@ -165,8 +164,7 @@ public class GraphicsTree {
         return total;
     }
     
-    //TODO: doesnt work right
-    public int longestLine()
+    /*public int longestLine()
     {
         ArrayList<GraphicsTree> nextLevel = children;
         int currentLine;
@@ -186,6 +184,5 @@ public class GraphicsTree {
             biggestLine = currentLine > biggestLine ? currentLine : biggestLine;
         }
         return biggestLine;
-    }
- 
+    }*/
 }

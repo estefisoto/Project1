@@ -6,11 +6,13 @@
 package mapjvm;
 
 import java.awt.Canvas;
+import java.awt.Dialog;
 import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.Menu;
 import java.awt.MenuBar;
 import java.awt.MenuItem;
+import java.awt.Scrollbar;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -31,19 +33,21 @@ public class GUI extends Frame implements ActionListener{
         Menu file = new Menu("File");
         bar.add(file);
         MenuItem connect = new MenuItem("Connect");
-        MenuItem close = new MenuItem("Close");
+        MenuItem disconnect = new MenuItem("Disconnect");
         MenuItem help = new MenuItem("Help");
         file.add(connect);
+        file.add(disconnect);
         file.add(help);
-        file.add(close);
         connect.addActionListener(this);
+        disconnect.addActionListener(this);
         help.addActionListener(this);
-        close.addActionListener(this);
         setMenuBar(bar);
-      //  Scrollbar vertical= new Scrollbar();
-      //  Scrollbar horizontal= new Scrollbar(Scrollbar.HORIZONTAL,1000,50,500,5000);
-      //  layout.add(vertical);
-      //  layout.add(horizontal);
+        //    Scrollbar vertical= new Scrollbar();
+        //    Scrollbar horizontal= new Scrollbar(Scrollbar.HORIZONTAL,1000,50,500,5000);
+        //    add(vertical);
+        //    add(horizontal);
+        Dialog x = new Dialog(this);
+        x.setModal(true);
         pack();
         setVisible(true);
     }
@@ -55,8 +59,11 @@ public class GUI extends Frame implements ActionListener{
             container.connect();
             container.repaint();
         }
-        else if(e.getActionCommand().equals("Close"))
-            System.out.println("Close");
+        else if(e.getActionCommand().equals("Disconnect"))
+        {
+            container.disconnect();
+            container.repaint();
+        }
         else if(e.getActionCommand().equals("Help"))
             System.out.println("Help");
     }
