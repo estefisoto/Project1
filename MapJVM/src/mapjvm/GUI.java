@@ -5,30 +5,37 @@
 
 package mapjvm;
 
-import java.awt.Canvas;
+import java.awt.Color;
 import java.awt.Dialog;
+import java.awt.Dimension;
 import java.awt.Frame;
-import java.awt.Graphics;
 import java.awt.Menu;
 import java.awt.MenuBar;
 import java.awt.MenuItem;
-import java.awt.Scrollbar;
+import java.awt.ScrollPane;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.JFrame;
+import javax.swing.JScrollPane;
 
 /**
  *
  * @author mwaldron74
  */
 public class GUI extends Frame implements ActionListener{
-    private TreeCanvas container;
+    private TreeCanvas drawingComponent;
+    private ScrollPane scroll;
     public GUI(){
-        super("");
+        super("");   
+        //setSize(300,300);
+        //Dimension set = new Dimension(200,200);
         addWindowListener(new closeWindow());
-        container = new TreeCanvas();
-        container.setSize(1300,400);
-        add(container);
-       
+        drawingComponent = new TreeCanvas();
+        scroll = new ScrollPane(ScrollPane.SCROLLBARS_ALWAYS);      
+        scroll.setBackground(Color.white);
+        scroll.add(drawingComponent);
+        add(scroll);
+
         MenuBar bar=new MenuBar();
         Menu file = new Menu("File");
         bar.add(file);
@@ -42,12 +49,10 @@ public class GUI extends Frame implements ActionListener{
         disconnect.addActionListener(this);
         help.addActionListener(this);
         setMenuBar(bar);
-        //    Scrollbar vertical= new Scrollbar();
-        //    Scrollbar horizontal= new Scrollbar(Scrollbar.HORIZONTAL,1000,50,500,5000);
-        //    add(vertical);
-        //    add(horizontal);
         Dialog x = new Dialog(this);
         x.setModal(true);
+       
+        
         pack();
         setVisible(true);
     }
@@ -55,14 +60,17 @@ public class GUI extends Frame implements ActionListener{
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getActionCommand().equals("Connect"))
-        {    
-            container.connect();
-            container.repaint();
+        {
+            drawingComponent.connect();
+            drawingComponent.repaint();
+            //scroll.repaint();
+            //scroll.notify();
+            
         }
         else if(e.getActionCommand().equals("Disconnect"))
         {
-            container.disconnect();
-            container.repaint();
+            drawingComponent.disconnect();
+            drawingComponent.repaint();
         }
         else if(e.getActionCommand().equals("Help"))
             System.out.println("Help");
