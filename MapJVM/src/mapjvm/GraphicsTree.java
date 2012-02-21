@@ -25,6 +25,7 @@ public class GraphicsTree {
     private int FONT_PADDING_X;
     private int fontX, fontY, ovalX;
     private int ovalY, width, height;
+    public int finalX,finalY;
     private HashMap<GraphicsTree, GraphicsTree> additionalConnections;
     
     public GraphicsTree(StringTree strTree)
@@ -39,6 +40,8 @@ public class GraphicsTree {
         fontY = ovalY + FONT_PADDING_Y;
         fontX = ovalX + FONT_PADDING_X;
         children = new ArrayList<GraphicsTree>();
+        finalX=0;
+        finalY=0;
         addChildren();
         additionalConnections = connections();
     }
@@ -55,6 +58,8 @@ public class GraphicsTree {
         ovalX = X;
         ovalY = Y;
         children = new ArrayList<GraphicsTree>();
+        finalX=0;
+        finalY=0;
         addChildren();
         additionalConnections = new HashMap<GraphicsTree, GraphicsTree>();
     }
@@ -85,12 +90,20 @@ public class GraphicsTree {
         for(StringTree child : st.getChildren())
         {   
             GraphicsTree graphChild=new GraphicsTree(child, PADDING_X, PADDING_Y);
+            
+            graphChild.finalY=PADDING_Y;
+            
             children.add(graphChild);
             if(child.getNumChildren() > 0)
                 PADDING_X += graphChild.getchW()+ 50 * child.getNumChildren() ;
             else
                 PADDING_X += FONT_SIZE * child.getName().length() + 50;
+            if(finalY<graphChild.finalY )
+                finalY= graphChild.finalY;
         }
+        if(PADDING_X> finalX)
+            finalX=PADDING_X;
+        
     }
     
     private ArrayList<GraphicsTree> allNodes()
@@ -123,8 +136,9 @@ public class GraphicsTree {
         else if(st.getType().equals("StackFrame"))
             g.setColor(Color.ORANGE);
         else
-            g.setColor(Color.RED);
+            g.setColor(Color.RED);        
         g.fillOval(ovalX, ovalY, width, height);
+       
         g.setColor(Color.BLACK);
         g.drawOval(ovalX  , ovalY, width, height);
         g.drawString(st.getName(), fontX, fontY);
