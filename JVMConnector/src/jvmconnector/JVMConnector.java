@@ -9,6 +9,7 @@ import com.sun.jdi.connect.AttachingConnector;
 import com.sun.jdi.connect.Connector;
 import com.sun.jdi.connect.IllegalConnectorArgumentsException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -21,7 +22,12 @@ public class JVMConnector {
     /**
      * @param args the command line arguments
      */
+    
+    
+                                        
     public static void main(String[] args) throws IOException, IllegalConnectorArgumentsException, InterruptedException, IncompatibleThreadStateException, AbsentInformationException, ClassNotLoadedException {
+        ArrayList<Value> seen = new ArrayList<Value> ();
+        
         VirtualMachineManager vmm = Bootstrap.virtualMachineManager();
         AttachingConnector socket = null;
         VirtualMachine vm = null;
@@ -43,8 +49,6 @@ public class JVMConnector {
         vm = socket.attach(parametersMap);
         vm.suspend();
         System.out.println("Attached to Process '" + vm.name() + "'");
-        
-        List<ObjectReference> attempt = null;
 
         List<ThreadReference> ltr = vm.allThreads();
             for(ThreadReference thread_ref : ltr)
@@ -57,35 +61,79 @@ public class JVMConnector {
                     System.out.println(sf_list.size() + " Stack Frames");
                     for(StackFrame sf : sf_list)
                     {
+                        ArrayList<StringTree> Trees = new ArrayList<StringTree>();
+                        StringTree parent = new StringTree("main", "StackFrame");
                         try {
                                 List<LocalVariable> llv = sf.visibleVariables();
-                                for (LocalVariable lv : llv) 
+                                for(LocalVariable l : llv)
                                 {
-                                    //System.out.println(lv.typeName());
-                                    //System.out.println(lv);
-                                    if(lv.type() instanceof ReferenceType)
-                                    {
-                                        ReferenceType rt = (ReferenceType) lv.type();
-                                        List<ObjectReference> objref_l = rt.instances(0);
-                                        for(ObjectReference objref : objref_l)
-                                        {                                       
-                                            List<ObjectReference> referringObj_l = objref.referringObjects(0);
-                                            System.out.println("******" + objref);
-                                            for(ObjectReference referring_obj : referringObj_l)
+                                   if(l.type() instanceof ReferenceType)
+                                   {
+                                       ReferenceType rt = (ReferenceType) l.type();
+                                       List<ObjectReference> lor = rt.instances(0);
+                                       for(ObjectReference or: lor)
+                                       {
+                                            if(or.type() instanceof ClassType)
                                             {
-                                                System.out.println("^^ referred to by: " + referring_obj);
+                                                ClassType ct = (ClassType) or.type();
+                                                List<Field> lf = ct.allFields();
+                                                for(Field f : lf)
+                                                {
+                                                    if(f.type() instanceof ReferenceType)
+                                                    {
+                                                        //System.out.println("goodbye " + f);
+                                                        Value v = or.getValue(f);
+                                                        dfs(v, parent, seen);
+                                                    }
+                                                }
                                             }
-                                        }
-                                    }
+                                       }
+                                   }
                                 }
                             }
-                          
                         catch (AbsentInformationException aie) {
-                            System.out.println("No info for " + sf);
-                        }
-                    }
+                                        System.out.println("No info for " + sf);
+                                    }
                 }
-                
             }
+        }
+    }
+
+    private static void dfs(Value v, StringTree parent, ArrayList<Value> seen) throws ClassNotLoadedException 
+    {
+        if(v == null)
+            return;
+        if(seen.contains(v))
+            return;
+        if(v.type() instanceof PrimitiveType)
+        {
+            seen.add(v);
+            StringTree z = new StringTree("name", "value");
+            parent.addConnection(parent, z);
+            return;
+        }
+        if(v instanceof ObjectReference)
+        {
+            System.out.println("DFS");
+            seen.add(v);
+            ObjectReference o = (ObjectReference) v;
+            if(o.type() instanceof ClassType)
+            {
+                ClassType ct = (ClassType) o.type();
+                if(ct.toString().startsWith("class java.lang"))
+                    return;
+                for(Field f : ct.allFields())
+                {
+                    System.out.println("Hello " + f);
+                    Value u = o.getValue(f);
+                    StringTree z = new StringTree(ct.name(), "new");
+                    parent.addConnection(parent, z);
+                    dfs(u, z, seen);
+                }
+            }
+        }
     }
 }
+
+
+
