@@ -4,13 +4,6 @@
  */
 package mapjvm;
 
-import java.awt.Canvas;
-import java.awt.Frame;
-import java.awt.Menu;
-import java.awt.MenuBar;
-import java.awt.MenuItem;
-import java.awt.Scrollbar;
-
 /**
  *
  * @author estefisoto

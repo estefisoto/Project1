@@ -2,32 +2,31 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package mapjvm;
 
 import java.awt.Canvas;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.util.ArrayList;
-
+import javax.swing.JComponent;
 /**
  *
  * @author esoto.student
  */
-public class TreeCanvas extends Canvas {
+public final class TreeCanvas extends JComponent {
 
-    ArrayList<StringTree> nodes= new  ArrayList<StringTree>();
+    ArrayList<StringTree> nodes = new ArrayList<StringTree>();
 
     //DefaultSize
-     public TreeCanvas() {
-        //Set size and color of canvas
-        this.setSize(1000,1000);
-        this.setBackground(Color.white);
-     }
-     
-     public void connect()
-     {
-         //TODO : Delete this test code
+    public TreeCanvas() {
+        this.setSize(500,500);
+        this.setPreferredSize(new Dimension(500,500));
+        this.setBackground(Color.white);        
+    }
+
+    public void connect() {
+        //TODO : Delete this test code
         StringTree main = new StringTree("main", "StackFrame");
         StringTree BSTa = new StringTree("BST A", "Object");
         StringTree BSTb = new StringTree("BST B", "Object");
@@ -47,18 +46,25 @@ public class TreeCanvas extends Canvas {
         BSTb.addChild(chBL);
         BSTb.addChild(chBR);
         nodes.add(main);
-     }
-     
-     @Override
-    //Need this function in order to paint on canvas
-    public void paint(Graphics g)
-    {
-       //For loop that draws all shapes currently in the vector
-       for (int i = 0; i < nodes.size(); i++) {
-           StringTree s = nodes.get(i);
-           (new GraphicsTree(s)).draw(g);
-        }
+        
+        //TODO: add method to find canvas max size(of graphics tree)
+        //this.setPreferredSize(new Dimension(nodes.get(0).getWidth(),nodes.get(0).getHeight()));
+        int x= (new GraphicsTree(nodes.get(0))).finalX +200;
+        this.setPreferredSize(new Dimension(x,nodes.get(0).getNumChildren()*300));
+        
     }
 
+    public void disconnect() {
+        nodes.clear();
+    }
 
+    @Override
+    //Need this function in order to paint on canvas
+    public void paint(Graphics g) {
+        //For loop that draws all shapes currently in the vector
+        for (int i = 0; i < nodes.size(); i++) {
+            StringTree s = nodes.get(i);
+            (new GraphicsTree(s)).draw(g);
+        }
+    }
 }
