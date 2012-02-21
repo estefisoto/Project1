@@ -49,7 +49,8 @@ public final class TreeCanvas extends JComponent {
         
         //TODO: add method to find canvas max size(of graphics tree)
         //this.setPreferredSize(new Dimension(nodes.get(0).getWidth(),nodes.get(0).getHeight()));
-        this.setPreferredSize(new Dimension(10000,10000));
+        int x= (new GraphicsTree(nodes.get(0))).finalX +200;
+        this.setPreferredSize(new Dimension(x,nodes.get(0).getNumChildren()*300));
         
     }
 
