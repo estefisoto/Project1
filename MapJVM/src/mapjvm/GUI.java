@@ -15,6 +15,7 @@ import java.awt.MenuItem;
 import java.awt.ScrollPane;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 
@@ -27,14 +28,15 @@ public class GUI extends Frame implements ActionListener{
     private ScrollPane scroll;
     public GUI(){
         super("");   
-        //setSize(300,300);
-        //Dimension set = new Dimension(200,200);
+               
         addWindowListener(new closeWindow());
         drawingComponent = new TreeCanvas();
         scroll = new ScrollPane(ScrollPane.SCROLLBARS_ALWAYS);      
         scroll.setBackground(Color.white);
-        scroll.add(drawingComponent);
+        //scroll.add(drawingComponent);
+        scroll.setSize(500,500);
         add(scroll);
+
 
         MenuBar bar=new MenuBar();
         Menu file = new Menu("File");
@@ -61,8 +63,12 @@ public class GUI extends Frame implements ActionListener{
     public void actionPerformed(ActionEvent e) {
         if(e.getActionCommand().equals("Connect"))
         {
+            
             drawingComponent.connect();
             drawingComponent.repaint();
+            scroll.add(drawingComponent);
+            scroll.repaint();
+
                                   
         }
         else if(e.getActionCommand().equals("Disconnect"))
@@ -71,6 +77,34 @@ public class GUI extends Frame implements ActionListener{
             drawingComponent.repaint();
         }
         else if(e.getActionCommand().equals("Help"))
-            System.out.println("Help");
+        {
+            System.out.println("Current path"+ System.getProperty("user.dir") );
+            File instructions= new File(System.getProperty("user.dir")+"/instructions.txt");
+            instructions.setReadOnly();
+
+            try {
+
+		if (instructions.exists()) {
+
+			Process p = Runtime
+			   .getRuntime()
+			   .exec("gedit "+instructions);
+			//p.waitFor();
+
+		} else {
+
+			System.out.println("File does not exist");
+
+		}
+
+		System.out.println("Done");}
+                catch (Exception ex) {
+		ex.printStackTrace();
+	  }
+
+
+        }
+
+
     }
 }
