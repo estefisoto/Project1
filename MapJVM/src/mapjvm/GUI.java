@@ -63,9 +63,7 @@ public class GUI extends Frame implements ActionListener{
         {
             drawingComponent.connect();
             drawingComponent.repaint();
-            //scroll.repaint();
-            //scroll.notify();
-            
+                                  
         }
         else if(e.getActionCommand().equals("Disconnect"))
         {
