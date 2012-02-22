@@ -7,7 +7,6 @@ package mapjvm;
 
 import java.awt.Color;
 import java.awt.Dialog;
-import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.Menu;
 import java.awt.MenuBar;
@@ -16,14 +15,24 @@ import java.awt.ScrollPane;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import javax.swing.JFrame;
-import javax.swing.JScrollPane;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.lang.model.type.ReferenceType;
+import com.sun.jdi.*;
+import com.sun.jdi.connect.AttachingConnector;
+import com.sun.jdi.connect.Connector;
+import com.sun.jdi.connect.IllegalConnectorArgumentsException;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 
 /**
  *
  * @author mwaldron74
  */
-public class GUI extends Frame implements ActionListener{
+public class GUI extends Frame implements ActionListener {
     private TreeCanvas drawingComponent;
     private ScrollPane scroll;
     public GUI(){
@@ -60,11 +69,24 @@ public class GUI extends Frame implements ActionListener{
     }
     
     @Override
-    public void actionPerformed(ActionEvent e) {
-        if(e.getActionCommand().equals("Connect"))
+    public void actionPerformed  (ActionEvent e){
+       if(e.getActionCommand().equals("Connect"))
         {
-            
-            drawingComponent.connect();
+            try {
+                drawingComponent.connect();
+            } catch (IOException ex) {
+                Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IllegalConnectorArgumentsException ex) {
+                Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IncompatibleThreadStateException ex) {
+                Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (AbsentInformationException ex) {
+                Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ClassNotLoadedException ex) {
+                Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
+            }
             drawingComponent.repaint();
             scroll.add(drawingComponent);
             scroll.repaint();
@@ -107,4 +129,7 @@ public class GUI extends Frame implements ActionListener{
 
 
     }
+
+
+
 }

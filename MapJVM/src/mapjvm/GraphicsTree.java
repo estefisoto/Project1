@@ -43,7 +43,8 @@ public class GraphicsTree {
         finalX=0;
         finalY=0;
         addChildren();
-        additionalConnections = connections();
+        //TODO:
+        //additionalConnections = connections();
     }
     
     public GraphicsTree(StringTree strTree, int X, int Y)
@@ -85,7 +86,7 @@ public class GraphicsTree {
   
     private void addChildren()
     {
-        PADDING_Y += 100;
+        PADDING_Y += 150;
         PADDING_X += ovalX;
         for(StringTree child : st.getChildren())
         {   
@@ -95,7 +96,7 @@ public class GraphicsTree {
             
             children.add(graphChild);
             if(child.getNumChildren() > 0)
-                PADDING_X += graphChild.getchW()+ 50 * child.getNumChildren() ;
+                PADDING_X += graphChild.getchW() +(50 * child.getNumChildren()) ;
             else
                 PADDING_X += FONT_SIZE * child.getName().length() + 50;
             if(finalY<graphChild.finalY )
@@ -121,10 +122,13 @@ public class GraphicsTree {
         Font font = new Font(Font.SANS_SERIF, Font.BOLD, FONT_SIZE);
         g.setFont(font);
         g.setColor(Color.black);
-        for(GraphicsTree from : additionalConnections.keySet())
+        if(additionalConnections != null)
         {
-            GraphicsTree to = additionalConnections.get(from);
-            g.drawLine(from.getCenterX(), from.getCenterY(), to.getCenterX(), to.getCenterY());
+            for(GraphicsTree from : additionalConnections.keySet())
+            {
+                GraphicsTree to = additionalConnections.get(from);
+                g.drawLine(from.getCenterX(), from.getCenterY(), to.getCenterX(), to.getCenterY());
+            }
         }
         for(GraphicsTree child : children)
         {

@@ -19,7 +19,15 @@ public class StringTree {
     public HashMap<StringTree, StringTree> additionalConnections;
     private String name;
     private String typeof;
-    
+
+    public StringTree()
+    {
+        name = "nothing";
+        typeof = "nothing";
+        children = new ArrayList<StringTree>();
+        additionalConnections = new HashMap<StringTree, StringTree>();
+    }
+
     public StringTree(String stringName, String type)
     {
         name = stringName;
