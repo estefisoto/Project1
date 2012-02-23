@@ -150,7 +150,14 @@ public final class TreeCanvas extends JComponent {
             {
                 ClassType ct = (ClassType) o.type();
                 if(ct.toString().startsWith("class java.lang"))
+                {
+                    int s = ct.name().toString().lastIndexOf(".") + 1;
+                    
+                    z = new StringTree(ct.name().substring(s), "value");
+                    Lookup.put(v,z);
+                    parent.addChild(z);
                     return;
+                }
                 z = new StringTree(ct.name().substring(17), "Object");
                 Lookup.put(v,z);
                 parent.addChild(z);
