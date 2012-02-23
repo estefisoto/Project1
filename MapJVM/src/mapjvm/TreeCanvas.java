@@ -88,7 +88,7 @@ public final class TreeCanvas extends JComponent {
                                Value v= sf.getValue(l);
                                if(!DFSLookup.containsKey(v))
                                {
-                                  dfs(v, start, DFSLookup);
+                                  dfs(v, start, start, DFSLookup);
 
                                }
                             }
@@ -122,7 +122,7 @@ public final class TreeCanvas extends JComponent {
     }
 
 
-    private void dfs(Value v, StringTree parent,HashMap<Value,StringTree> Lookup ) throws ClassNotLoadedException
+    private void dfs(Value v, StringTree topParent, StringTree parent,HashMap<Value,StringTree> Lookup ) throws ClassNotLoadedException
     {
         StringTree z ;
 
@@ -132,13 +132,14 @@ public final class TreeCanvas extends JComponent {
         }
         if(Lookup.containsKey(v)) {
             //TODO: make additional Connection
+            topParent.addConnection(parent, Lookup.get(v));
             return;
+            
         }
         if(v.type() instanceof PrimitiveType)
         {
             
             z = new StringTree(v.toString(), "value");
-            Lookup.put(v,z);
             parent.addChild(z);
             return;
         }
@@ -158,7 +159,7 @@ public final class TreeCanvas extends JComponent {
                 {
                    // System.out.println("Hello " + f);
                     Value u = o.getValue(f);                 
-                    dfs(u, z, Lookup);
+                    dfs(u, topParent, z, Lookup);
                 }
             }
         }

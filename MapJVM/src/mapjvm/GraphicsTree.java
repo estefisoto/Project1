@@ -77,7 +77,7 @@ public class GraphicsTree {
             for(GraphicsTree gt : allNodes())
                 if(gt.st.equals(value))
                     to.add(gt);
-        for(int i = 0; i < from.size(); i++)
+        for(int i = 0; i < from.size() && i < to.size(); i++)
         {
             allConnections.put(from.get(i), to.get(i));
         }
@@ -96,11 +96,11 @@ public class GraphicsTree {
             
             children.add(graphChild);
             if(child.getNumChildren() > 0)
-                PADDING_X += graphChild.getchW() +(50 * child.getNumChildren()) ;
+            PADDING_X += graphChild.getchW() +( 50* child.getNumChildren()) ;
+           
             else
-                PADDING_X += FONT_SIZE * child.getName().length() + 50;
-            if(finalY<graphChild.finalY )
-                finalY= graphChild.finalY;
+                PADDING_X += FONT_SIZE * child.getName().length() + 100;
+            
         }
         if(PADDING_X> finalX)
             finalX=PADDING_X;
@@ -122,17 +122,16 @@ public class GraphicsTree {
         Font font = new Font(Font.SANS_SERIF, Font.BOLD, FONT_SIZE);
         g.setFont(font);
         g.setColor(Color.black);
-        if(additionalConnections != null)
-        {
-            for(GraphicsTree from : additionalConnections.keySet())
-            {
-                GraphicsTree to = additionalConnections.get(from);
-                g.drawLine(from.getCenterX(), from.getCenterY(), to.getCenterX(), to.getCenterY());
-            }
+        for(GraphicsTree from : connections().keySet())
+        {     
+            GraphicsTree to = connections().get(from);
+            
+            g.drawLine(from.getCenterX() - 10, from.getCenterY(), to.getCenterX() - 10, to.getCenterY());
+            
         }
         for(GraphicsTree child : children)
         {
-           g.drawLine(getCenterX(), getCenterY(), child.getCenterX(), child.getCenterY());
+           g.drawLine(getCenterX() + 10, getCenterY(), child.getCenterX() + 10, child.getCenterY());
            child.draw(g);
         }
         if(st.getType().equals("Object"))
