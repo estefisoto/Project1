@@ -35,76 +35,91 @@ public final class TreeCanvas extends JComponent {
         this.setBackground(Color.white);        
     }
 
-    public void connect()throws IOException, IllegalConnectorArgumentsException, InterruptedException, IncompatibleThreadStateException, AbsentInformationException, ClassNotLoadedException  {
-        HashMap<Value,StringTree> DFSLookup = new HashMap<Value, StringTree>();
-        boolean one = false;
+public void connect()throws IOException, IllegalConnectorArgumentsException, InterruptedException, IncompatibleThreadStateException, AbsentInformationException, ClassNotLoadedException  {
+    StringTree main = new StringTree("main", "StackFrame");
+    StringTree BSTa = new StringTree("BST A", "Object");
+    StringTree BSTb = new StringTree("BST B", "Object");
+    StringTree chAL = new StringTree("child A Left", "Object");
+    StringTree chBL = new StringTree("child B Left", "Object");
+    StringTree chBR = new StringTree("child B Right", "Object");
+    StringTree LL0 = new StringTree("Linked List (0)", "Object");
+    StringTree LL1 = new StringTree("Linked List (1)", "Object");
+    StringTree LL2 = new StringTree("Linked List (2)", "Object");
+    main.addChild(BSTa);
+    main.addChild(BSTb);
+    main.addChild(LL0);
+    LL0.addChild(LL1);
+    LL1.addChild(LL2);
+    BSTa.addChild(chAL);
+    main.addConnection(BSTa, BSTb);
+    BSTb.addChild(chBL);
+    BSTb.addChild(chBR);
+    nodes.add(main);
+    /*HashMap<Value,StringTree> DFSLookup = new HashMap<Value, StringTree>();
+    boolean one = false;
 
-        StringTree start = new StringTree();
-        //TODO: Value?
-       // ArrayList<Value> seen = new ArrayList<Value> ();
+    StringTree start = new StringTree();
+    //TODO: Value?
+    // ArrayList<Value> seen = new ArrayList<Value> ();
 
-        VirtualMachineManager vmm = Bootstrap.virtualMachineManager();
-        AttachingConnector socket = null;
-        VirtualMachine vm = null;
-        List<AttachingConnector> aclist = vmm.attachingConnectors();
-        for (AttachingConnector attachingconnector : aclist)
+    VirtualMachineManager vmm = Bootstrap.virtualMachineManager();
+    AttachingConnector socket = null;
+    VirtualMachine vm = null;
+    List<AttachingConnector> aclist = vmm.attachingConnectors();
+    for (AttachingConnector attachingconnector : aclist)
+    {
+        if(attachingconnector.transport().name().equals("dt_socket"))
         {
-            if(attachingconnector.transport().name().equals("dt_socket"))
-            {
-                socket = attachingconnector;
-                System.out.println("Connector Found");
-                break;
-            }
+            socket = attachingconnector;
+            System.out.println("Connector Found");
+            break;
         }
+    }
 
-        Map parametersMap = socket.defaultArguments();
-        Connector.IntegerArgument portArg = (Connector.IntegerArgument)parametersMap.get("port");
-        System.out.println(portArg);
-        portArg.setValue(8000);
-        vm = socket.attach(parametersMap);
-        vm.suspend();
-        System.out.println("Attached to Process '" + vm.name() + "'");
+    Map parametersMap = socket.defaultArguments();
+    Connector.IntegerArgument portArg = (Connector.IntegerArgument)parametersMap.get("port");
+    System.out.println(portArg);
+    portArg.setValue(8000);
+    vm = socket.attach(parametersMap);
+    vm.suspend();
+    System.out.println("Attached to Process '" + vm.name() + "'");
 
-        List<ThreadReference> ltr = vm.allThreads();
-            for(ThreadReference thread_ref : ltr)
+    List<ThreadReference> ltr = vm.allThreads();
+        for(ThreadReference thread_ref : ltr)
+        {
+            if(thread_ref.name().equalsIgnoreCase("main"))
             {
-                if(thread_ref.name().equalsIgnoreCase("main"))
+                ThreadReference main_tr = thread_ref;
+                System.out.println(main_tr);
+                List<StackFrame> sf_list = main_tr.frames();
+                System.out.println(sf_list.size() + " Stack Frames");
+
+                for(StackFrame sf : sf_list)
                 {
-                    ThreadReference main_tr = thread_ref;
-                    System.out.println(main_tr);
-                    List<StackFrame> sf_list = main_tr.frames();
-                    System.out.println(sf_list.size() + " Stack Frames");
-
-                    for(StackFrame sf : sf_list)
-                    {
-
-
                     System.out.println(sf.toString());
                     start = new StringTree("main", "StackFrame");
-                    try {
-                            List<LocalVariable> llv = sf.visibleVariables();
-                            for(LocalVariable l : llv)
+                    try 
+                    {
+                        List<LocalVariable> llv = sf.visibleVariables();
+                        for(LocalVariable l : llv)
+                        {
+                            Value v = sf.getValue(l);
+                            if(!DFSLookup.containsKey(v))
                             {
-                               Value v= sf.getValue(l);
-                               if(!DFSLookup.containsKey(v))
-                               {
-                                  dfs(v, start, start, DFSLookup);
-
-                               }
+                                dfs(v, start, start, DFSLookup);
                             }
                         }
-                        catch (AbsentInformationException aie) {
-                            System.out.println("No info for " + sf);
-                        }
+                    } catch (AbsentInformationException aie) {
+                        System.out.println("No info for " + sf);
                     }
-
                 }
-               }
-                nodes.add(start);
-                int x= (new GraphicsTree(nodes.get(0))).finalX +200;
-//                this.setPreferredSize(new Dimension(x,nodes.get(0).getNumChildren()*300));
-                  this.setPreferredSize(new Dimension(20000,20000));
-           }
+            }
+        }
+        nodes.add(start);
+        int x= (new GraphicsTree(nodes.get(0))).finalX +200;
+//      this.setPreferredSize(new Dimension(x,nodes.get(0).getNumChildren()*300));
+        this.setPreferredSize(new Dimension(20000,20000));*/
+    }
 
 
     public void disconnect() {
