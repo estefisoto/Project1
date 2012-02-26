@@ -13,7 +13,8 @@ import java.awt.event.WindowEvent;
  */
 class closeWindow extends WindowAdapter {
 
-    public closeWindow() {
+    public closeWindow()  
+    {
     }
     
     @Override
