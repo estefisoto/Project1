@@ -4,28 +4,22 @@
  */
 package mapjvm;
 
-import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.util.ArrayList;
 import javax.swing.JComponent;
 import com.sun.jdi.*;
-import com.sun.jdi.connect.AttachingConnector;
-import com.sun.jdi.connect.Connector;
 import com.sun.jdi.connect.IllegalConnectorArgumentsException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 /**
  *
  * @author esoto.student
  */
 public final class TreeCanvas extends JComponent {
 
-    ArrayList<StringTree> nodes = new ArrayList<StringTree>();
+    ArrayList<GraphicsTree> nodes = new ArrayList<GraphicsTree>();
 
 
     //DefaultSize
@@ -35,26 +29,26 @@ public final class TreeCanvas extends JComponent {
         this.setBackground(Color.white);        
     }
 
-public void connect()throws IOException, IllegalConnectorArgumentsException, InterruptedException, IncompatibleThreadStateException, AbsentInformationException, ClassNotLoadedException  {
-    StringTree main = new StringTree("main", "StackFrame");
-    StringTree BSTa = new StringTree("BST A", "Object");
-    StringTree BSTb = new StringTree("BST B", "Object");
-    StringTree chAL = new StringTree("child A Left", "Object");
-    StringTree chBL = new StringTree("child B Left", "Object");
-    StringTree chBR = new StringTree("child B Right", "Object");
-    StringTree LL0 = new StringTree("Linked List (0)", "Object");
-    StringTree LL1 = new StringTree("Linked List (1)", "Object");
-    StringTree LL2 = new StringTree("Linked List (2)", "Object");
-    main.addChild(BSTa);
-    main.addChild(BSTb);
-    main.addChild(LL0);
-    LL0.addChild(LL1);
-    LL1.addChild(LL2);
-    BSTa.addChild(chAL);
-    main.addConnection(BSTa, BSTb);
-    BSTb.addChild(chBL);
-    BSTb.addChild(chBR);
-    nodes.add(main);
+    public void connect()throws IOException, IllegalConnectorArgumentsException, InterruptedException, IncompatibleThreadStateException, AbsentInformationException, ClassNotLoadedException  {
+        StringTree main = new StringTree("main", "StackFrame");
+        StringTree BSTa = new StringTree("BST A", "Object");
+        StringTree BSTb = new StringTree("BST B", "Object");
+        StringTree chAL = new StringTree("child A Left", "Object");
+        StringTree chBL = new StringTree("child B Left", "Object");
+        StringTree chBR = new StringTree("child B Right", "Object");
+        StringTree LL0 = new StringTree("Linked List (0)", "Object");
+        StringTree LL1 = new StringTree("Linked List (1)", "Object");
+        StringTree LL2 = new StringTree("Linked List (2)", "Object");
+        main.addChild(BSTa);
+        main.addChild(BSTb);
+        main.addChild(LL0);
+        LL0.addChild(LL1);
+        LL1.addChild(LL2);
+        BSTa.addChild(chAL);
+        main.addConnection(BSTa, BSTb);
+        BSTb.addChild(chBL);
+        BSTb.addChild(chBR);
+        nodes.add(new GraphicsTree(main));
     /*HashMap<Value,StringTree> DFSLookup = new HashMap<Value, StringTree>();
     boolean one = false;
 
@@ -85,14 +79,14 @@ public void connect()throws IOException, IllegalConnectorArgumentsException, Int
     System.out.println("Attached to Process '" + vm.name() + "'");
 
     List<ThreadReference> ltr = vm.allThreads();
-        for(ThreadReference thread_ref : ltr)
+    for(ThreadReference thread_ref : ltr)
+    {
+        if(thread_ref.name().equalsIgnoreCase("main"))
         {
-            if(thread_ref.name().equalsIgnoreCase("main"))
-            {
-                ThreadReference main_tr = thread_ref;
-                System.out.println(main_tr);
-                List<StackFrame> sf_list = main_tr.frames();
-                System.out.println(sf_list.size() + " Stack Frames");
+            ThreadReference main_tr = thread_ref;
+            System.out.println(main_tr);
+            List<StackFrame> sf_list = main_tr.frames();
+            System.out.println(sf_list.size() + " Stack Frames");
 
                 for(StackFrame sf : sf_list)
                 {
@@ -110,13 +104,13 @@ public void connect()throws IOException, IllegalConnectorArgumentsException, Int
                             }
                         }
                     } catch (AbsentInformationException aie) {
-                        System.out.println("No info for " + sf);
+                         System.out.println("No info for " + sf);
                     }
                 }
             }
         }
         nodes.add(start);
-        int x= (new GraphicsTree(nodes.get(0))).finalX +200;
+        int x = (new GraphicsTree(nodes.get(0))).finalX +200;
 //      this.setPreferredSize(new Dimension(x,nodes.get(0).getNumChildren()*300));
         this.setPreferredSize(new Dimension(20000,20000));*/
     }
@@ -131,8 +125,7 @@ public void connect()throws IOException, IllegalConnectorArgumentsException, Int
     public void paint(Graphics g) {
         //For loop that draws all shapes currently in the vector
         for (int i = 0; i < nodes.size(); i++) {
-            StringTree s = nodes.get(i);
-            (new GraphicsTree(s)).draw(g);
+            nodes.get(i).draw(g);
         }
     }
 
