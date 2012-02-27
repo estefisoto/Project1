@@ -21,7 +21,7 @@ public class GraphicsTree{
     private HashMap<GraphicsTree, GraphicsTree> additionalConnections;
     private final int FONT_SIZE = 20;
     private final int FONT_PADDING_Y = 22;
-    private final int PADDING = 20;
+    public final int PADDING = 20;
     private int FONT_PADDING_X;
     private int fontX, fontY, ovalX, ovalY, width, height;
     
@@ -40,6 +40,7 @@ public class GraphicsTree{
         height = 5 * FONT_SIZE / 3;
         addChildren();
         setGraphics();
+        additionalConnections = connections();
     }
     
     //This is only called within this classs
@@ -97,13 +98,12 @@ public class GraphicsTree{
         Font font = new Font(Font.SANS_SERIF, Font.BOLD, FONT_SIZE);
         g.setFont(font);
         g.setColor(Color.black);
-        for(GraphicsTree from : connections().keySet())
+        HashMap<GraphicsTree, GraphicsTree> connections = additionalConnections;
+        for(GraphicsTree from : connections.keySet())
         {     
-            /*8GraphicsTree to = connections().get(from);
-            
-            g.drawLine(from.ovalX + (from.width / 2) - 10, from.ovalY + (from.height / 2), 
-                       to.ovalX + (to.width / 2) - 10, to.ovalY + (to.width /2));
-            */
+            GraphicsTree to = connections.get(from);
+            g.drawLine(from.getX() + (from.getWidth() / 2) - 10, from.getY() + (from.getHeight() / 2), 
+                       to.getX() + (to.getWidth() / 2) - 10, to.getY() + (to.getHeight() / 2));
         }
         for(GraphicsTree child : children)
         {
@@ -168,6 +168,36 @@ public class GraphicsTree{
     public int getWidth()
     {
         return width;
+    }
+    
+    public int getX()
+    {
+        return ovalX;
+    }
+    
+    public int getXWindow()
+    {
+        ArrayList<GraphicsTree> all = allNodes();
+        int farX = 0;
+        for(GraphicsTree gt : all)
+            if(gt.getX() + gt.getWidth() > farX)
+                farX = gt.getX() + gt.getWidth();
+        return farX + PADDING;
+    }
+    
+    public int getY()
+    {
+        return ovalY;
+    }
+    
+    public int getYWindow()
+    {
+        ArrayList<GraphicsTree> all = allNodes();
+        int farY = 0;
+        for(GraphicsTree gt : all)
+            if(gt.getY() + gt.getHeight() > farY)
+                farY = gt.getY() + gt.getHeight();
+        return farY + PADDING;
     }
     
     private void setGraphics()

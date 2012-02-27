@@ -45,10 +45,13 @@ public final class TreeCanvas extends JComponent {
         LL0.addChild(LL1);
         LL1.addChild(LL2);
         BSTa.addChild(chAL);
-        main.addConnection(BSTa, BSTb);
+        main.addConnection(BSTa, chBL);
+        main.addConnection(chBR, chBL);
         BSTb.addChild(chBL);
         BSTb.addChild(chBR);
-        nodes.add(new GraphicsTree(main));
+        GraphicsTree g = new GraphicsTree(main);
+        nodes.add(g);
+        this.setPreferredSize(new Dimension(g.getXWindow(), g.getYWindow()));
     /*HashMap<Value,StringTree> DFSLookup = new HashMap<Value, StringTree>();
     boolean one = false;
 
