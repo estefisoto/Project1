@@ -21,7 +21,7 @@ public class GraphicsTree{
     private HashMap<GraphicsTree, GraphicsTree> additionalConnections;
     private final int FONT_SIZE = 20;
     private final int FONT_PADDING_Y = 22;
-    public final int PADDING = 20;
+    public final int PADDING = 50;
     private int FONT_PADDING_X;
     private int fontX, fontY, ovalX, ovalY, width, height;
     

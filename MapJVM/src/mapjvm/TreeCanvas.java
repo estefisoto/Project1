@@ -8,11 +8,16 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import javax.swing.JComponent;
+import java.util.HashMap;
 import com.sun.jdi.*;
+import com.sun.jdi.connect.AttachingConnector;
+import com.sun.jdi.connect.Connector;
 import com.sun.jdi.connect.IllegalConnectorArgumentsException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  *
  * @author esoto.student
@@ -30,29 +35,29 @@ public final class TreeCanvas extends JComponent {
     }
 
     public void connect()throws IOException, IllegalConnectorArgumentsException, InterruptedException, IncompatibleThreadStateException, AbsentInformationException, ClassNotLoadedException  {
-        StringTree main = new StringTree("main", "StackFrame");
-        StringTree BSTa = new StringTree("BST A", "Object");
-        StringTree BSTb = new StringTree("BST B", "Object");
-        StringTree chAL = new StringTree("child A Left", "Object");
-        StringTree chBL = new StringTree("child B Left", "Object");
-        StringTree chBR = new StringTree("child B Right", "Object");
-        StringTree LL0 = new StringTree("Linked List (0)", "Object");
-        StringTree LL1 = new StringTree("Linked List (1)", "Object");
-        StringTree LL2 = new StringTree("Linked List (2)", "Object");
-        main.addChild(BSTa);
-        main.addChild(BSTb);
-        main.addChild(LL0);
-        LL0.addChild(LL1);
-        LL1.addChild(LL2);
-        BSTa.addChild(chAL);
-        main.addConnection(BSTa, chBL);
-        main.addConnection(chBR, chBL);
-        BSTb.addChild(chBL);
-        BSTb.addChild(chBR);
-        GraphicsTree g = new GraphicsTree(main);
-        nodes.add(g);
-        this.setPreferredSize(new Dimension(g.getXWindow(), g.getYWindow()));
-    /*HashMap<Value,StringTree> DFSLookup = new HashMap<Value, StringTree>();
+//        StringTree main = new StringTree("main", "StackFrame");
+//        StringTree BSTa = new StringTree("BST A", "Object");
+//        StringTree BSTb = new StringTree("BST B", "Object");
+//        StringTree chAL = new StringTree("child A Left", "Object");
+//        StringTree chBL = new StringTree("child B Left", "Object");
+//        StringTree chBR = new StringTree("child B Right", "Object");
+//        StringTree LL0 = new StringTree("Linked List (0)", "Object");
+//        StringTree LL1 = new StringTree("Linked List (1)", "Object");
+//        StringTree LL2 = new StringTree("Linked List (2)", "Object");
+//        main.addChild(BSTa);
+//        main.addChild(BSTb);
+//        main.addChild(LL0);
+//        LL0.addChild(LL1);
+//        LL1.addChild(LL2);
+//        BSTa.addChild(chAL);
+//        main.addConnection(BSTa, chBL);
+//        main.addConnection(chBR, chBL);
+//        BSTb.addChild(chBL);
+//        BSTb.addChild(chBR);
+//        GraphicsTree g = new GraphicsTree(main);
+//        nodes.add(g);
+       
+    HashMap<Value,StringTree> DFSLookup = new HashMap<Value, StringTree>();
     boolean one = false;
 
     StringTree start = new StringTree();
@@ -106,16 +111,24 @@ public final class TreeCanvas extends JComponent {
                                 dfs(v, start, start, DFSLookup);
                             }
                         }
+
                     } catch (AbsentInformationException aie) {
                          System.out.println("No info for " + sf);
                     }
+                    
+                    GraphicsTree g = new GraphicsTree(start);
+                            nodes.add(g);
                 }
-            }
+
         }
-        nodes.add(start);
-        int x = (new GraphicsTree(nodes.get(0))).finalX +200;
-//      this.setPreferredSize(new Dimension(x,nodes.get(0).getNumChildren()*300));
-        this.setPreferredSize(new Dimension(20000,20000));*/
+
+
+        }
+
+      //  GraphicsTree g = new GraphicsTree(start);
+       // nodes.add(g);
+
+         //this.setPreferredSize(new Dimension(g.getXWindow(), g.getYWindow()));
     }
 
 
@@ -185,27 +198,4 @@ public final class TreeCanvas extends JComponent {
 
 }
 
-//Code graveyard
-//TODO : Delete this test code
-       /* StringTree main = new StringTree("main", "StackFrame");
-        StringTree BSTa = new StringTree("BST A", "Object");
-        StringTree BSTb = new StringTree("BST B", "Object");
-        StringTree chAL = new StringTree("child A Left", "Object");
-        StringTree chBL = new StringTree("child B Left", "Object");
-        StringTree chBR = new StringTree("child B Right", "Object");
-        StringTree LL0 = new StringTree("Linked List (0)", "Object");
-        StringTree LL1 = new StringTree("Linked List (1)", "Object");
-        StringTree LL2 = new StringTree("Linked List (2)", "Object");
-        main.addChild(BSTa);
-        main.addChild(BSTb);
-        main.addChild(LL0);
-        LL0.addChild(LL1);
-        LL1.addChild(LL2);
-        BSTa.addChild(chAL);
-        main.addConnection(BSTa, BSTb);
-        BSTb.addChild(chBL);
-        BSTb.addChild(chBR);
-        nodes.add(main); */
 
-        //TODO: add method to find canvas max size(of graphics tree)
-        //this.setPreferredSize(new Dimension(nodes.get(0).getWidth(),nodes.get(0).getHeight()));
