@@ -13,6 +13,7 @@ import com.sun.jdi.*;
 import com.sun.jdi.connect.AttachingConnector;
 import com.sun.jdi.connect.Connector;
 import com.sun.jdi.connect.IllegalConnectorArgumentsException;
+import java.awt.Image;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -167,7 +168,6 @@ public final class TreeCanvas extends JComponent {
         }
         if(v.type() instanceof PrimitiveType)
         {
-            
             z = new StringTree(v.toString(), "value");
             parent.addChild(z);
             return;
@@ -200,6 +200,7 @@ public final class TreeCanvas extends JComponent {
             }
         }
     }
+
 
 }
 

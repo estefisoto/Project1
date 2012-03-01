@@ -24,8 +24,8 @@ import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
-import javax.swing.JDialog;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -44,15 +44,15 @@ public class GUI extends Frame implements ActionListener {
         scroll = new ScrollPane(ScrollPane.SCROLLBARS_ALWAYS);
         scroll.setBackground(Color.white);
         //scroll.add(drawingComponent);
-        scroll.setSize(500, 500);
+        scroll.setSize(700, 700);
         add(scroll);
 
 
         MenuBar bar = new MenuBar();
         Menu file = new Menu("File");
         bar.add(file);
-        MenuItem browse = new MenuItem("Choose Java Class");
-        MenuItem connect = new MenuItem("Connect");
+        MenuItem browse = new MenuItem("Browse for Java Class");
+         MenuItem connect = new MenuItem("Connect");
         MenuItem saveImg = new MenuItem("Save Image As...");
         MenuItem disconnect = new MenuItem("Disconnect");
         MenuItem help = new MenuItem("Help");
@@ -83,8 +83,88 @@ public class GUI extends Frame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getActionCommand().equals("Connect")) {
+
+        Process p = null;
+        if (e.getActionCommand().equals("Browse for Java Class")) {
+            //New file chooser
+            final JFileChooser fc = new JFileChooser();
+            //New Dialog
+
+            //Set return val to Open file browse in frame
+            int returnVal = fc.showOpenDialog(this);
+            //Declare string to hold line from file
+            String classPath = new String();
+            String className = new String();
+
+            //If a new file was selected from browser
+            if (returnVal == JFileChooser.APPROVE_OPTION) {
+                //Set file equal to the sellected file
+                File file = fc.getSelectedFile();
+
+                int remove = 0, last = 0;
+                last = fc.getCurrentDirectory().toString().lastIndexOf("/");
+                classPath = fc.getCurrentDirectory().toString().substring(0, last);
+                System.out.println(classPath);
+
+                remove = file.getName().indexOf(".");
+                className = file.getName().substring(0, remove);
+                System.out.println(className);
+
+
+                try {
+                    String packageName = JOptionPane.showInputDialog("Please enter the package name:");
+                    p = Runtime.getRuntime().exec("java -cp " + classPath + " -agentlib:jdwp=transport=dt_socket,server=y,address=8000,suspend=n " + packageName + "." + className);
+
+                } catch (IOException ex) {
+                    System.out.println("COULD NOT CONNECT TO JVM!!");
+
+                }
+            }
+
             try {
+                drawingComponent.connect();
+            } catch (IOException ex) {
+                System.out.println(ex.getMessage());
+            } catch (IllegalConnectorArgumentsException ex) {
+                System.out.println("IllegalConnector" + ex.getMessage());
+            } catch (InterruptedException ex) {
+                System.out.println("InterruptedException" + ex.getMessage());
+            } catch (IncompatibleThreadStateException ex) {
+                System.out.println(ex.getMessage());
+            } catch (AbsentInformationException ex) {
+                System.out.println(ex.getMessage());
+            } catch (ClassNotLoadedException ex) {
+                System.out.println(ex.getMessage());
+            }
+
+           
+        } else if (e.getActionCommand().equals("Save Image As...")) {
+
+            BufferedImage img = new BufferedImage(drawingComponent.getWidth(), drawingComponent.getHeight(), BufferedImage.TYPE_INT_RGB);
+            Graphics g = img.createGraphics();
+            g.setColor(Color.WHITE);
+            g.fillRect(0, 0, img.getWidth(), img.getHeight());
+            drawingComponent.paint(img.createGraphics());
+
+
+            final JFileChooser fc = new JFileChooser();
+            //Set return val equal to showSavedialog
+            int returnVal = fc.showSaveDialog(this);
+
+            if (returnVal == JFileChooser.APPROVE_OPTION) {
+                File outputfile = fc.getSelectedFile();
+                try {
+                    ImageIO.write(img, "png", outputfile);
+                } catch (IOException ex) {
+                    Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+
+
+
+            }
+        }else if (e.getActionCommand().equals("Connect")) {
+           try {
                 drawingComponent.connect();
             } catch (IOException ex) {
                 System.out.println(ex.getMessage());
@@ -103,9 +183,16 @@ public class GUI extends Frame implements ActionListener {
             drawingComponent.repaint();
             scroll.add(drawingComponent);
             scroll.repaint();
-        } else if (e.getActionCommand().equals("Disconnect")) {
+
+        }
+        else if (e.getActionCommand().equals("Disconnect")) {
+            if (p != null) {
+                p.destroy();
+            }
             drawingComponent.disconnect();
             drawingComponent.repaint();
+
+
         } else if (e.getActionCommand().equals("Help")) {
             System.out.println("Current path" + System.getProperty("user.dir"));
             File instructions = new File(System.getProperty("user.dir") + "/instructions.txt");
@@ -130,69 +217,7 @@ public class GUI extends Frame implements ActionListener {
             }
 
 
-        } else if (e.getActionCommand().equals("Choose Java Class")) {
-            //New file chooser
-            final JFileChooser fc = new JFileChooser();
-            //New Dialog
-
-            //Set return val to Open file browse in frame
-            int returnVal = fc.showOpenDialog(this);
-            //Declare string to hold line from file
-            String classPath = new String();
-            String className = new String();
-
-            //If a new file was selected from browser
-            if (returnVal == JFileChooser.APPROVE_OPTION) {
-                //Set file equal to the sellected file
-                File file = fc.getSelectedFile();
-                classPath = fc.getCurrentDirectory().toString();
-                System.out.println(classPath);
-                int remove=0;
-                remove = file.getName().indexOf(".");
-                className = file.getName().substring(0,remove);
-                System.out.println(className);
-
-
-                try {
-                    Runtime.getRuntime().exec("java -cp ~" +classPath+" -agentlib:jdwp=transport=dt_socket,server=y,address=8000,suspend=n " + className + "." + className);
-                    try {
-                        System.out.println("java -cp ~" +classPath+" -agentlib:jdwp=transport=dt_socket,server=y,address=8000,suspend=n " + className + "." + className);
-                        Thread.sleep(2000);
-                    } catch (InterruptedException ex) {
-                        System.err.println("May not connect appropriately");
-                    }
-                } catch (IOException ex) {
-                    System.out.println("COULD NOT CONNECT TO JVM!!");
-
-                }
-            }
         }
-        else if (e.getActionCommand().equals("Save Image As...")) {
 
-            BufferedImage img= new BufferedImage(drawingComponent.getWidth(),drawingComponent.getHeight(),BufferedImage.TYPE_INT_RGB);
-            Graphics g= img.createGraphics();
-            g.setColor(Color.WHITE);
-            g.fillRect(0, 0, img.getWidth(), img.getHeight());
-            drawingComponent.paint(img.createGraphics());
-          
-
-            final JFileChooser fc = new JFileChooser();
-            //Set return val equal to showSavedialog
-            int returnVal = fc.showSaveDialog(this);
-
-            if (returnVal == JFileChooser.APPROVE_OPTION) {
-              File outputfile =fc.getSelectedFile() ;
-                try {
-                    ImageIO.write(img, "png", outputfile);
-                } catch (IOException ex) {
-                    Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
-                }
-
-
-
-
-        }
     }
-}
-
 }

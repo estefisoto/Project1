@@ -99,19 +99,37 @@ public class GraphicsTree{
         g.setFont(font);
         g.setColor(Color.black);
         HashMap<GraphicsTree, GraphicsTree> connections = additionalConnections;
-        for(GraphicsTree from : connections.keySet())
+        /*for(GraphicsTree to : connections.keySet())
         {     
-            GraphicsTree to = connections.get(from);
-            g.drawLine(from.getX() + (from.getWidth() / 2), from.getY() + (from.getHeight() / 2), 
+            GraphicsTree from = connections.get(to);
+            if(from.getY() > to.getY())
+            {
+                g.drawLine(from.getX() + (from.getWidth() / 2) - 10, from.getY() + (from.getHeight() / 2),
                        to.getX() + (to.getWidth() / 2), to.getY());
-            g.fillOval(to.getX() - 5 + (to.getWidth() / 2), to.getY() - 5, 10, 10);
-        }
+                g.fillOval(to.getX() - 5 + (to.getWidth() / 2), to.getY() - 5, 10, 10);
+            }
+            else if(from.getY() == to.getY())
+            {
+                g.drawLine(from.getX() + (from.getWidth() / 2), from.getY(),
+                       to.getX() + (to.getWidth() / 2), to.getY());
+                if(from.getX() < to.getX())
+                    g.fillOval(to.getX() - 5, to.getY() - 5 + (to.getHeight() / 2), 10, 10);
+                else
+                    g.fillOval(to.getX() - 5 + to.getWidth(), to.getY() - 5 + (to.getHeight() / 2), 10, 10);
+            }
+            else
+            {
+                g.drawLine(from.getX() + (from.getWidth() / 2) + 10, from.getY() + (from.getHeight() / 2),
+                       to.getX() + (to.getWidth() / 2), to.getY() + to.getHeight());
+                g.fillOval(from.getX() + (from.getWidth() / 2)- 5 , from.getY() - 5 + from.getHeight(), 10, 10);
+            }
+        }*/
         for(GraphicsTree child : children)
         {
-           g.drawLine(ovalX + (width / 2), ovalY + (height / 2), 
+           g.drawLine(ovalX + (width / 2) + 10, ovalY + (height / 2),
                       child.ovalX + (child.width / 2), child.ovalY);
            child.draw(g);
-           g.fillOval(child.getX() - 5+ (child.width / 2), child.getY() - 5, 10,10);
+           g.fillOval(child.getX() - 5 + (child.width / 2), child.getY() - 5, 10,10);
         }
         if(st.getType().equals("Object"))
             g.setColor(Color.GREEN);
