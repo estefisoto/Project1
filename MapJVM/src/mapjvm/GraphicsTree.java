@@ -102,14 +102,16 @@ public class GraphicsTree{
         for(GraphicsTree from : connections.keySet())
         {     
             GraphicsTree to = connections.get(from);
-            g.drawLine(from.getX() + (from.getWidth() / 2) - 10, from.getY() + (from.getHeight() / 2), 
-                       to.getX() + (to.getWidth() / 2) - 10, to.getY() + (to.getHeight() / 2));
+            g.drawLine(from.getX() + (from.getWidth() / 2), from.getY() + (from.getHeight() / 2), 
+                       to.getX() + (to.getWidth() / 2), to.getY());
+            g.fillOval(to.getX() - 5 + (to.getWidth() / 2), to.getY() - 5, 10, 10);
         }
         for(GraphicsTree child : children)
         {
-           g.drawLine(ovalX + (width / 2) + 10, ovalY + (height / 2), 
-                      child.ovalX + (child.width / 2) + 10, child.ovalY + (child.height / 2));
+           g.drawLine(ovalX + (width / 2), ovalY + (height / 2), 
+                      child.ovalX + (child.width / 2), child.ovalY);
            child.draw(g);
+           g.fillOval(child.getX() - 5+ (child.width / 2), child.getY() - 5, 10,10);
         }
         if(st.getType().equals("Object"))
             g.setColor(Color.GREEN);

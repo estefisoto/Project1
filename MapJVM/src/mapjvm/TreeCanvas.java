@@ -58,7 +58,7 @@ public final class TreeCanvas extends JComponent {
 //        nodes.add(g);
        
     HashMap<Value,StringTree> DFSLookup = new HashMap<Value, StringTree>();
-    boolean one = false;
+  
 
     StringTree start = new StringTree();
     //TODO: Value?
@@ -80,9 +80,10 @@ public final class TreeCanvas extends JComponent {
 
     Map parametersMap = socket.defaultArguments();
     Connector.IntegerArgument portArg = (Connector.IntegerArgument)parametersMap.get("port");
-    System.out.println(portArg);
+    System.out.println("Dies? "+portArg);
     portArg.setValue(8000);
     vm = socket.attach(parametersMap);
+    System.out.println("Attached ?");
     vm.suspend();
     System.out.println("Attached to Process '" + vm.name() + "'");
 
@@ -116,8 +117,8 @@ public final class TreeCanvas extends JComponent {
                          System.out.println("No info for " + sf);
                     }
                     
-                    GraphicsTree g = new GraphicsTree(start);
-                            nodes.add(g);
+//                    GraphicsTree g = new GraphicsTree(start);
+//                            nodes.add(g);
                 }
 
         }
@@ -125,10 +126,10 @@ public final class TreeCanvas extends JComponent {
 
         }
 
-      //  GraphicsTree g = new GraphicsTree(start);
-       // nodes.add(g);
+        GraphicsTree g = new GraphicsTree(start);
+        nodes.add(g);
 
-         //this.setPreferredSize(new Dimension(g.getXWindow(), g.getYWindow()));
+         this.setPreferredSize(new Dimension(g.getXWindow(), g.getYWindow()));
     }
 
 
@@ -159,6 +160,10 @@ public final class TreeCanvas extends JComponent {
             topParent.addConnection(parent, Lookup.get(v));
             return;
             
+        }
+        if(v.type() instanceof StackFrame)
+        {
+           //TODO:
         }
         if(v.type() instanceof PrimitiveType)
         {
