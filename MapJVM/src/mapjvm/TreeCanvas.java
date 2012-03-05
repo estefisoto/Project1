@@ -81,7 +81,6 @@ public final class TreeCanvas extends JComponent {
 
     Map parametersMap = socket.defaultArguments();
     Connector.IntegerArgument portArg = (Connector.IntegerArgument)parametersMap.get("port");
-    System.out.println("Dies? "+portArg);
     portArg.setValue(8000);
     vm = socket.attach(parametersMap);
     System.out.println("Attached ?");
@@ -97,11 +96,12 @@ public final class TreeCanvas extends JComponent {
             System.out.println(main_tr);
             List<StackFrame> sf_list = main_tr.frames();
             System.out.println(sf_list.size() + " Stack Frames");
-
+             start = new StringTree(thread_ref.name(), "StackFrame");
                 for(StackFrame sf : sf_list)
                 {
                     System.out.println(sf.toString());
-                    start = new StringTree("main", "StackFrame");
+                    StringTree start2 = new StringTree(thread_ref.name(), "StackFrame");
+                    start.addChild(start2);
                     try 
                     {
                         List<LocalVariable> llv = sf.visibleVariables();
@@ -117,20 +117,12 @@ public final class TreeCanvas extends JComponent {
                     } catch (AbsentInformationException aie) {
                          System.out.println("No info for " + sf);
                     }
-                    
-//                    GraphicsTree g = new GraphicsTree(start);
-//                            nodes.add(g);
                 }
-
+            }
         }
-
-
-        }
-
         GraphicsTree g = new GraphicsTree(start);
         nodes.add(g);
-
-         this.setPreferredSize(new Dimension(g.getXWindow(), g.getYWindow()));
+        this.setPreferredSize(new Dimension(g.getXWindow(), g.getYWindow()));
     }
 
 
@@ -182,7 +174,6 @@ public final class TreeCanvas extends JComponent {
                 if(ct.toString().startsWith("class java.lang"))
                 {
                     int s = ct.name().toString().lastIndexOf(".") + 1;
-                    
                     z = new StringTree(ct.name().substring(s), "value");
                     Lookup.put(v,z);
                     parent.addChild(z);

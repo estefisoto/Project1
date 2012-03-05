@@ -92,8 +92,15 @@ public class GraphicsTree{
         }
         return allConnections;
     }
-    
+
     public void draw(Graphics g)
+    {
+        drawLines(g);
+        drawNodes(g);
+        System.out.println(this.getName());
+    }
+
+    public void drawLines(Graphics g)
     {
         Font font = new Font(Font.SANS_SERIF, Font.BOLD, FONT_SIZE);
         g.setFont(font);
@@ -119,8 +126,20 @@ public class GraphicsTree{
         {
            g.drawLine(ovalX + (width / 2), ovalY + (height / 2),
                       child.ovalX + (child.width / 2), child.ovalY);
-           child.draw(g);
-           g.fillOval(child.getX() - 5 + (child.width / 2), child.getY() - 5, 10,10);
+           child.drawLines(g);
+        }
+    }
+
+    public void drawNodes(Graphics g)
+    {
+        Font font = new Font(Font.SANS_SERIF, Font.BOLD, FONT_SIZE);
+        g.setFont(font);
+        g.setColor(Color.black);
+        HashMap<GraphicsTree, GraphicsTree> connections = additionalConnections;
+        for(GraphicsTree child : children)
+        {
+            g.fillOval(child.getX() - 5 + (child.width / 2), child.getY() - 5, 10,10);
+            child.drawNodes(g);
         }
         for(GraphicsTree to : connections.keySet())
         {
@@ -145,13 +164,13 @@ public class GraphicsTree{
         else if(st.getType().equals("StackFrame"))
             g.setColor(Color.ORANGE);
         else
-            g.setColor(Color.RED);        
+            g.setColor(Color.RED);
         g.fillOval(ovalX, ovalY, width, height);
         g.setColor(Color.BLACK);
         g.drawOval(ovalX  , ovalY, width, height);
         g.drawString(st.getName(), fontX, fontY);
     }
-    
+
     private int getCenterX()
     {
         ArrayList<StringTree> nextLevel = new ArrayList<StringTree>();
