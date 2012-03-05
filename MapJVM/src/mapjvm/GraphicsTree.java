@@ -19,8 +19,8 @@ public class GraphicsTree{
     protected StringTree st;
     private ArrayList<GraphicsTree> children;
     private HashMap<GraphicsTree, GraphicsTree> additionalConnections;
-    private final int FONT_SIZE = 20;
-    private final int FONT_PADDING_Y = 22;
+    private final int FONT_SIZE = 15;
+    private final int FONT_PADDING_Y = 18;
     public final int PADDING = 50;
     private int FONT_PADDING_X;
     private int fontX, fontY, ovalX, ovalY, width, height;
@@ -49,7 +49,7 @@ public class GraphicsTree{
         st = strTree;
         children = new ArrayList<GraphicsTree>();
         additionalConnections = new HashMap<GraphicsTree, GraphicsTree>();
-        FONT_PADDING_X = st.getName().length() * 5;
+        FONT_PADDING_X = st.getName().length() * 3;
         width = w;
         height = 5 * FONT_SIZE / 3;
         addChildren();
@@ -97,7 +97,6 @@ public class GraphicsTree{
     {
         drawLines(g);
         drawNodes(g);
-        System.out.println(this.getName());
     }
 
     public void drawLines(Graphics g)
@@ -136,11 +135,6 @@ public class GraphicsTree{
         g.setFont(font);
         g.setColor(Color.black);
         HashMap<GraphicsTree, GraphicsTree> connections = additionalConnections;
-        for(GraphicsTree child : children)
-        {
-            g.fillOval(child.getX() - 5 + (child.width / 2), child.getY() - 5, 10,10);
-            child.drawNodes(g);
-        }
         for(GraphicsTree to : connections.keySet())
         {
             GraphicsTree from = connections.get(to);
@@ -159,10 +153,17 @@ public class GraphicsTree{
                     g.fillOval(from.getX() + (from.getWidth() / 2)- 5 , from.getY() - 5 + from.getHeight(), 10, 10);
             }
         }
+        for(GraphicsTree child : children)
+        {
+            g.fillOval(child.getX() - 5 + (child.width / 2), child.getY() - 5, 10,10);
+            child.drawNodes(g);
+        }
         if(st.getType().equals("Object"))
             g.setColor(Color.GREEN);
         else if(st.getType().equals("StackFrame"))
             g.setColor(Color.ORANGE);
+        else if(st.getType().equals("Value"))
+            g.setColor(Color.GRAY);
         else
             g.setColor(Color.RED);
         g.fillOval(ovalX, ovalY, width, height);

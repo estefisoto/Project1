@@ -36,34 +36,13 @@ public final class TreeCanvas extends JComponent {
     }
 
     public void connect()throws IOException, IllegalConnectorArgumentsException, InterruptedException, IncompatibleThreadStateException, AbsentInformationException, ClassNotLoadedException  {
-//        StringTree main = new StringTree("main", "StackFrame");
-//        StringTree BSTa = new StringTree("BST A", "Object");
-//        StringTree BSTb = new StringTree("BST B", "Object");
-//        StringTree chAL = new StringTree("child A Left", "Object");
-//        StringTree chBL = new StringTree("child B Left", "Object");
-//        StringTree chBR = new StringTree("child B Right", "Object");
-//        StringTree LL0 = new StringTree("Linked List (0)", "Object");
-//        StringTree LL1 = new StringTree("Linked List (1)", "Object");
-//        StringTree LL2 = new StringTree("Linked List (2)", "Object");
-//        main.addChild(BSTa);
-//        main.addChild(BSTb);
-//        main.addChild(LL0);
-//        LL0.addChild(LL1);
-//        LL1.addChild(LL2);
-//        BSTa.addChild(chAL);
-//        main.addConnection(BSTa, chBL);
-//        main.addConnection(chBR, chBL);
-//        BSTb.addChild(chBL);
-//        BSTb.addChild(chBR);
-//        GraphicsTree g = new GraphicsTree(main);
-//        nodes.add(g);
+
        
     HashMap<Value,StringTree> DFSLookup = new HashMap<Value, StringTree>();
   
 
     StringTree start = new StringTree();
-    //TODO: Value?
-    // ArrayList<Value> seen = new ArrayList<Value> ();
+  
 
     VirtualMachineManager vmm = Bootstrap.virtualMachineManager();
     AttachingConnector socket = null;
@@ -83,7 +62,6 @@ public final class TreeCanvas extends JComponent {
     Connector.IntegerArgument portArg = (Connector.IntegerArgument)parametersMap.get("port");
     portArg.setValue(8000);
     vm = socket.attach(parametersMap);
-    System.out.println("Attached ?");
     vm.suspend();
     System.out.println("Attached to Process '" + vm.name() + "'");
 
@@ -93,14 +71,12 @@ public final class TreeCanvas extends JComponent {
         if(thread_ref.name().equalsIgnoreCase("main"))
         {
             ThreadReference main_tr = thread_ref;
-            System.out.println(main_tr);
             List<StackFrame> sf_list = main_tr.frames();
             System.out.println(sf_list.size() + " Stack Frames");
-             start = new StringTree(thread_ref.name(), "StackFrame");
+            start = new StringTree(thread_ref.name(), "StackFrame");
                 for(StackFrame sf : sf_list)
                 {
-                    System.out.println(sf.toString());
-                    StringTree start2 = new StringTree(thread_ref.name(), "StackFrame");
+                    StringTree start2 = new StringTree(sf.toString().substring(sf.toString().lastIndexOf("of") + 3), "StackFrame");
                     start.addChild(start2);
                     try 
                     {
@@ -149,50 +125,83 @@ public final class TreeCanvas extends JComponent {
             return;
         }
         if(Lookup.containsKey(v)) {
-            //TODO: make additional Connection
+            
             topParent.addConnection(parent, Lookup.get(v));
             return;
             
         }
         if(v.type() instanceof StackFrame)
         {
-           //TODO:
+            StackFrame sf = (StackFrame) v;
+            //System.out.println(sf.toString());
+            StringTree st = new StringTree(sf.toString().substring(sf.toString().lastIndexOf("of")+3), "StackFrame");
+            parent.addChild(st);
+            Lookup.put(v, st);
+            try
+            {
+                List<LocalVariable> llv = sf.visibleVariables();
+                for(LocalVariable l : llv)
+                {
+                    Value val = sf.getValue(l);
+                    if(!Lookup.containsKey(val))
+                    {
+                        dfs(val, topParent, st, Lookup);
+                    } else {
+                        topParent.addConnection(Lookup.get(v), Lookup.get(val));
+                    }
+
+                }
+
+            } catch (AbsentInformationException aie) {
+                 System.out.println("No info for " + sf);
+            }
         }
         if(v.type() instanceof PrimitiveType)
         {
-            z = new StringTree(v.toString(), "value");
+            z = new StringTree(v.toString(), "Value");
             parent.addChild(z);
             return;
         }
         if(v instanceof ObjectReference)
         {
-            //System.out.println("DFS");
             ObjectReference o = (ObjectReference) v;
             if(o.type() instanceof ClassType)
             {
                 ClassType ct = (ClassType) o.type();
-                if(ct.toString().startsWith("class java.lang"))
+
+                int s = ct.name().toString().lastIndexOf(".") + 1;
+
+               if(ct.toString().startsWith("class java.lang"))
                 {
-                    int s = ct.name().toString().lastIndexOf(".") + 1;
-                    z = new StringTree(ct.name().substring(s), "value");
+                    
+                    z = new StringTree(ct.name().substring(s), "Value");
                     Lookup.put(v,z);
                     parent.addChild(z);
                     return;
                 }
-                z = new StringTree(ct.name().substring(17), "Object");
+             
+                z = new StringTree(ct.name().substring(s), "Object");
                 Lookup.put(v,z);
                 parent.addChild(z);
                 for(Field f : ct.allFields())
                 {
-                   // System.out.println("Hello " + f);
-                    Value u = o.getValue(f);                 
+                    Value u = o.getValue(f);
                     dfs(u, topParent, z, Lookup);
                 }
+            } else if (v instanceof ArrayReference){
+                ArrayReference aref = (ArrayReference) v;
+                z = new StringTree(aref.toString().substring(aref.toString().lastIndexOf(".")+1,aref.toString().lastIndexOf(" ")), "Object");
+                Lookup.put(v,z);
+                parent.addChild(z);
+                for(Value val : aref.getValues())
+                    if(!(val.type().toString().equals("byte"))){
+                        System.out.println(val.type());
+                        dfs(val, topParent, z, Lookup);
+                    }
             }
         }
+
     }
-
-
 }
 
 
