@@ -51,17 +51,14 @@ public class GUI extends Frame implements ActionListener {
         MenuBar bar = new MenuBar();
         Menu file = new Menu("File");
         bar.add(file);
-        MenuItem browse = new MenuItem("Browse for Java Class");
-         MenuItem connect = new MenuItem("Connect");
+        MenuItem connect = new MenuItem("Connect");
         MenuItem saveImg = new MenuItem("Save Image As...");
         MenuItem disconnect = new MenuItem("Disconnect");
         MenuItem help = new MenuItem("Help");
-        file.add(browse);
         file.add(connect);
         file.add(saveImg);
         file.add(disconnect);
         file.add(help);
-        browse.addActionListener(this);
         saveImg.addActionListener(this);
         connect.addActionListener(this);
         disconnect.addActionListener(this);
@@ -85,7 +82,7 @@ public class GUI extends Frame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
 
         Process p = null;
-        if (e.getActionCommand().equals("Browse for Java Class")) {
+        if (e.getActionCommand().equals("Connect")) {
             //New file chooser
             final JFileChooser fc = new JFileChooser();
             //New Dialog
@@ -114,7 +111,11 @@ public class GUI extends Frame implements ActionListener {
                 try {
                     String packageName = JOptionPane.showInputDialog("Please enter the package name:");
                     p = Runtime.getRuntime().exec("java -cp " + classPath + " -agentlib:jdwp=transport=dt_socket,server=y,address=8000,suspend=n " + packageName + "." + className);
-
+                    try {
+                        Thread.sleep(200);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 } catch (IOException ex) {
                     System.out.println("COULD NOT CONNECT TO JVM!!");
 
@@ -136,7 +137,9 @@ public class GUI extends Frame implements ActionListener {
             } catch (ClassNotLoadedException ex) {
                 System.out.println(ex.getMessage());
             }
-
+            drawingComponent.repaint();
+            scroll.add(drawingComponent);
+            scroll.repaint();
            
         } else if (e.getActionCommand().equals("Save Image As...")) {
 
@@ -163,29 +166,7 @@ public class GUI extends Frame implements ActionListener {
 
 
             }
-        }else if (e.getActionCommand().equals("Connect")) {
-           try {
-                drawingComponent.connect();
-            } catch (IOException ex) {
-                System.out.println(ex.getMessage());
-            } catch (IllegalConnectorArgumentsException ex) {
-                System.out.println("IllegalConnector"+ex.getMessage());
-            } catch (InterruptedException ex) {
-                System.out.println("InterruptedException"+ex.getMessage());
-            } catch (IncompatibleThreadStateException ex) {
-               System.out.println(ex.getMessage());
-            } catch (AbsentInformationException ex) {
-               System.out.println(ex.getMessage());
-            } catch (ClassNotLoadedException ex) {
-                System.out.println(ex.getMessage());
-            }
-
-            drawingComponent.repaint();
-            scroll.add(drawingComponent);
-            scroll.repaint();
-
-        }
-        else if (e.getActionCommand().equals("Disconnect")) {
+        } else if (e.getActionCommand().equals("Disconnect")) {
             if (p != null) {
                 p.destroy();
             }
