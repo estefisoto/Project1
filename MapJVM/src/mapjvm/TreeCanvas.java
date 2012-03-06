@@ -74,9 +74,15 @@ public final class TreeCanvas extends JComponent {
             List<StackFrame> sf_list = main_tr.frames();
             System.out.println(sf_list.size() + " Stack Frames");
             start = new StringTree(thread_ref.name(), "StackFrame");
-                for(StackFrame sf : sf_list)
+
+            for(StackFrame sf : sf_list)
                 {
-                    StringTree start2 = new StringTree(sf.toString().substring(sf.toString().lastIndexOf("of") + 3), "StackFrame");
+                    String stackname = null;
+                    if(sf.toString().lastIndexOf("io") != -1)
+                        stackname = sf.toString().substring(sf.toString().lastIndexOf("io") + 3, sf.toString().indexOf("thread")-8);
+                    else
+                        stackname = sf.toString().substring(sf.toString().indexOf(".")+1,sf.toString().indexOf(":"));
+                    StringTree start2 = new StringTree(stackname, "StackFrame");
                     start.addChild(start2);
                     try 
                     {
@@ -86,7 +92,7 @@ public final class TreeCanvas extends JComponent {
                             Value v = sf.getValue(l);
                             if(!DFSLookup.containsKey(v))
                             {
-                                dfs(v, start, start, DFSLookup);
+                                dfs(v, start, start2, DFSLookup);
                             }
                         }
 
@@ -129,32 +135,6 @@ public final class TreeCanvas extends JComponent {
             topParent.addConnection(parent, Lookup.get(v));
             return;
             
-        }
-        if(v.type() instanceof StackFrame)
-        {
-            StackFrame sf = (StackFrame) v;
-            //System.out.println(sf.toString());
-            StringTree st = new StringTree(sf.toString().substring(sf.toString().lastIndexOf("of")+3), "StackFrame");
-            parent.addChild(st);
-            Lookup.put(v, st);
-            try
-            {
-                List<LocalVariable> llv = sf.visibleVariables();
-                for(LocalVariable l : llv)
-                {
-                    Value val = sf.getValue(l);
-                    if(!Lookup.containsKey(val))
-                    {
-                        dfs(val, topParent, st, Lookup);
-                    } else {
-                        topParent.addConnection(Lookup.get(v), Lookup.get(val));
-                    }
-
-                }
-
-            } catch (AbsentInformationException aie) {
-                 System.out.println("No info for " + sf);
-            }
         }
         if(v.type() instanceof PrimitiveType)
         {

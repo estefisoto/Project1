@@ -24,6 +24,7 @@ public class GraphicsTree{
     public final int PADDING = 50;
     private int FONT_PADDING_X;
     private int fontX, fontY, ovalX, ovalY, width, height;
+    private int childSize;
     
 //////////////////////////////
 // Constructors
@@ -39,6 +40,7 @@ public class GraphicsTree{
         width = FONT_SIZE * st.getName().length();
         height = 5 * FONT_SIZE / 3;
         addChildren();
+        getChildSize();
         setGraphics();
         additionalConnections = connections();
     }
@@ -53,11 +55,21 @@ public class GraphicsTree{
         width = w;
         height = 5 * FONT_SIZE / 3;
         addChildren();
+        getChildSize();
     }
     
 //////////////////////////////
 // Functions
 //////////////////////////////
+    public int getChildSize()
+    {
+        int childWidth = 0;
+        for(GraphicsTree gt : children)
+            childWidth += gt.getChildSize() + PADDING;
+        childSize = (width  + PADDING > childWidth) ? width + PADDING : childWidth;
+        return childSize;
+    }
+
     private void addChildren()
     {
         for(StringTree str : st.getChildren())
@@ -171,33 +183,6 @@ public class GraphicsTree{
         g.drawOval(ovalX  , ovalY, width, height);
         g.drawString(st.getName(), fontX, fontY);
     }
-
-    private int getCenterX()
-    {
-        ArrayList<StringTree> nextLevel = new ArrayList<StringTree>();
-        for(StringTree s : st.getChildren())
-            nextLevel.add(s);
-        int currentLine;
-        int biggestLine = width;
-        //Continue until all the nodes have been checked
-        while(!nextLevel.isEmpty())
-        {
-            currentLine = 0;
-            int i = 0;
-            int size = nextLevel.size();
-            while(i < size)
-            {
-                StringTree st = nextLevel.remove(0);
-                currentLine += PADDING + FONT_SIZE * st.getName().length();
-                for(StringTree child : st.getChildren())
-                    nextLevel.add(child);
-                i++;
-            }
-            //Check if current line is bigger than the biggest
-            biggestLine = currentLine > biggestLine ? currentLine : biggestLine;
-        }
-        return biggestLine / 2;
-    }
     
     public ArrayList<GraphicsTree> getChildren()
     {
@@ -251,48 +236,24 @@ public class GraphicsTree{
     
     private void setGraphics()
     {
-        int center = getCenterX();
-        setXY(center - (width / 2), 0);
-        ArrayList<GraphicsTree> nextLevel = new ArrayList<GraphicsTree>();
-        ArrayList<GraphicsTree> nextLevelCopy = new ArrayList<GraphicsTree>();
-        for(GraphicsTree g : children)
+        //TODO:
+        //setXY((childSize / 2) - (width / 2), 0);
+        setXY(0,0);
+        setChildGraphics();
+    }
+
+    public void setChildGraphics()
+    {
+        int Y = ovalY + height + (PADDING * 2);
+        int X = ovalX;
+        for(GraphicsTree gt : children)
         {
-            nextLevel.add(g);
-            nextLevelCopy.add(g);
+            gt.setXY(X, Y);
+            X += PADDING + gt.getChildSize();
+            if(gt.getChildren().size() > 0)
+                gt.setChildGraphics();
         }
-        int Y = 0;
-        int currentLine;
-        //Continue until all the nodes have been checked
-        while(!nextLevel.isEmpty())
-        {
-            Y += PADDING + height;
-            currentLine = 0;
-            
-            //Calculate current line size
-            int i = 0;
-            int size = nextLevel.size();
-            while(i < size)
-            {
-                GraphicsTree gt = nextLevel.remove(0);
-                currentLine += FONT_SIZE * gt.getName().length();
-                for(GraphicsTree child : gt.getChildren())
-                    nextLevel.add(child);
-                i++;
-            }
-            
-            i = 0;
-            size = nextLevelCopy.size();
-            int X = PADDING + center - (currentLine / 2);
-            while(i < size)
-            {
-                GraphicsTree gt = nextLevelCopy.remove(0);
-                gt.setXY(X, Y);
-                X += gt.getWidth() + PADDING;
-                for(GraphicsTree child : gt.getChildren())
-                    nextLevelCopy.add(child);
-                i++;
-            }
-        }
+        System.out.println(childSize );
     }
     
     public void setXY(int X, int Y)
