@@ -73,7 +73,7 @@ public final class TreeCanvas extends JComponent {
             ThreadReference main_tr = thread_ref;
             List<StackFrame> sf_list = main_tr.frames();
             System.out.println(sf_list.size() + " Stack Frames");
-            start = new StringTree(thread_ref.name(), "StackFrame");
+            start = new StringTree(thread_ref.name() + "  ", "StackFrame");
 
             for(StackFrame sf : sf_list)
                 {

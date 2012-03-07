@@ -21,7 +21,8 @@ public class GraphicsTree{
     private HashMap<GraphicsTree, GraphicsTree> additionalConnections;
     private final int FONT_SIZE = 15;
     private final int FONT_PADDING_Y = 18;
-    public final int PADDING = 50;
+    public final int YPADDING = 100;
+    public final int XPADDING = 5;
     private int FONT_PADDING_X;
     private int fontX, fontY, ovalX, ovalY, width, height;
     private int childSize;
@@ -65,8 +66,8 @@ public class GraphicsTree{
     {
         int childWidth = 0;
         for(GraphicsTree gt : children)
-            childWidth += gt.getChildSize() + PADDING;
-        childSize = (width  + PADDING > childWidth) ? width + PADDING : childWidth;
+            childWidth += gt.getChildSize() + XPADDING;
+        childSize = (width  + XPADDING > childWidth) ? width + XPADDING : childWidth;
         return childSize;
     }
 
@@ -216,7 +217,7 @@ public class GraphicsTree{
         for(GraphicsTree gt : all)
             if(gt.getX() + gt.getWidth() > farX)
                 farX = gt.getX() + gt.getWidth();
-        return farX + PADDING;
+        return farX + XPADDING;
     }
     
     public int getY()
@@ -231,29 +232,28 @@ public class GraphicsTree{
         for(GraphicsTree gt : all)
             if(gt.getY() + gt.getHeight() > farY)
                 farY = gt.getY() + gt.getHeight();
-        return farY + PADDING;
+        return farY + YPADDING;
     }
     
     private void setGraphics()
     {
-        //TODO:
-        //setXY((childSize / 2) - (width / 2), 0);
-        setXY(0,0);
+        setXY((childSize / 2) - (width / 2), 0);
         setChildGraphics();
     }
 
     public void setChildGraphics()
     {
-        int Y = ovalY + height + (PADDING * 2);
-        int X = ovalX;
+        int Y = ovalY + height + (YPADDING);
+        int X = ovalX - (childSize / 2) + (width / 2);
         for(GraphicsTree gt : children)
         {
+            X += (gt.getChildSize() / 2) - (gt.getWidth() / 2) + XPADDING;
             gt.setXY(X, Y);
-            X += PADDING + gt.getChildSize();
+            X += (gt.getChildSize() / 2) + (gt.getWidth() / 2);
             if(gt.getChildren().size() > 0)
                 gt.setChildGraphics();
         }
-        System.out.println(childSize );
+        System.out.println(childSize);
     }
     
     public void setXY(int X, int Y)

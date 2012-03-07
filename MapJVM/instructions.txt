@@ -1,1 +1,23 @@
-test
+Welcome to the Connection Program!
+
+If you are having trouble connecting to your program follow these guidlines:
+
+To show a map of the guts of a java program, simply hit 'Connect' located
+under 'File' in the menu bar.
+
+We can only run programs saved in a NetBeans project so if you haven't 
+used your file as part of a project please do so and build the project once
+you have added your file.  
+
+When you hit 'connect' you will be asked to locate a file.  This file will be
+in your NetBeans project folder and will have a .class extension so if you
+are running 'Main.java' be sure to open 'Main.class'
+
+Once you have located and selected the file you will be asked to write the 
+package name your file was added to in NetBeans.  
+
+Your program will appear on screen! To save it simply click on 'File' 'Save Image'
+
+If there are any problems connecting make sure your program has a main file and that
+it is building in netbeans.
+
